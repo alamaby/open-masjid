@@ -22,7 +22,7 @@
 <span class="material-symbols-outlined text-xl">account_balance</span>
 <span class="text-sm font-medium">Profil Masjid</span>
 </a>
-<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors" href="#">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors" href="<?= base_url('dashboard/program') ?>">
 <span class="material-symbols-outlined text-xl">list_alt</span>
 <span class="text-sm font-medium">Program & Kegiatan</span>
 </a>

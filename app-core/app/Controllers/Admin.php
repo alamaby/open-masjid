@@ -15,4 +15,9 @@ class Admin extends BaseController
     {
         return view('dashboard/profil', ['title' => 'Profil Masjid - Masj.id']);
     }
+
+    public function program(): string
+    {
+        return view('dashboard/program', ['title' => 'Manajemen Program & Kegiatan - Masj.id']);
+    }
 }
