@@ -1,0 +1,27 @@
+# Vendor
+vendor/
+app-core/vendor/
+
+# Environment
+.env
+app-core/.env
+
+# Writable/Cache
+writable/*
+!writable/index.html
+!writable/.htaccess
+app-core/writable/*
+!app-core/writable/index.html
+!app-core/writable/.htaccess
+
+# IDE
+.vscode/
+.idea/
+.gemini/
+
+# OS
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store

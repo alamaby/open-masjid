@@ -1,0 +1,19 @@
+<?php
+
+use CodeIgniter\Router\RouteCollection;
+
+/**
+ * @var RouteCollection $routes
+ */
+$routes->get('/', 'Home::index');
+$routes->get('fitur', 'Home::fitur');
+$routes->get('kebaikan', 'Home::kebaikan');
+$routes->get('tentang', 'Home::tentang');
+$routes->get('laporan', 'Home::laporan');
+$routes->get('bantuan', 'Home::panduan');
+$routes->get('kontak', 'Home::kontak');
+$routes->get('privacy-policy', 'Home::privacy');
+$routes->get('term', 'Home::term');
+$routes->get('login', 'Home::login');
+$routes->get('register', 'Home::register');
+$routes->get('dashboard', 'Admin::index');
