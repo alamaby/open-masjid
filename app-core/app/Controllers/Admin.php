@@ -25,4 +25,9 @@ class Admin extends BaseController
     {
         return view('dashboard/berita', ['title' => 'Berita & Dokumentasi - Masj.id']);
     }
+
+    public function keuangan(): string
+    {
+        return view('dashboard/keuangan', ['title' => 'Manajemen Keuangan - Masj.id']);
+    }
 }

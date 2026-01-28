@@ -20,3 +20,4 @@ $routes->get('dashboard', 'Admin::index');
 $routes->get('dashboard/profil', 'Admin::profil');
 $routes->get('dashboard/program', 'Admin::program');
 $routes->get('dashboard/berita', 'Admin::berita');
+$routes->get('dashboard/keuangan', 'Admin::keuangan');
