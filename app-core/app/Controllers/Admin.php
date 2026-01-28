@@ -11,4 +11,8 @@ class Admin extends BaseController
         ];
         return view('dashboard/index', $data);
     }
+    public function profil(): string
+    {
+        return view('dashboard/profil', ['title' => 'Profil Masjid - Masj.id']);
+    }
 }
