@@ -19,3 +19,4 @@ $routes->get('register', 'Home::register');
 $routes->get('dashboard', 'Admin::index');
 $routes->get('dashboard/profil', 'Admin::profil');
 $routes->get('dashboard/program', 'Admin::program');
+$routes->get('dashboard/berita', 'Admin::berita');

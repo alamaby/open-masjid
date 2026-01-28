@@ -20,4 +20,9 @@ class Admin extends BaseController
     {
         return view('dashboard/program', ['title' => 'Manajemen Program & Kegiatan - Masj.id']);
     }
+
+    public function berita(): string
+    {
+        return view('dashboard/berita', ['title' => 'Berita & Dokumentasi - Masj.id']);
+    }
 }
