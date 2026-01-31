@@ -12,7 +12,11 @@ class MasjidModel extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['name', 'username', 'address'];
+    protected $allowedFields    = [
+        'name', 'nama_resmi', 'username', 'tahun_berdiri', 'jenis_masjid', 
+        'no_sk', 'address', 'provinsi', 'kabupaten', 'kecamatan', 'kelurahan', 
+        'visi', 'misi', 'foto_utama'
+    ];
 
     // Dates
     protected $useTimestamps = true;

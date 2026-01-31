@@ -22,6 +22,7 @@ $routes->post('/register/masjid', 'Auth::registerMasjid');
 $routes->post('/register/jamaah', 'Auth::registerJamaah');
 $routes->get('dashboard', 'Admin::index');
 $routes->get('dashboard/profil', 'Admin::profil');
+$routes->post('dashboard/profil', 'Admin::updateProfile');
 $routes->get('dashboard/program', 'Admin::program');
 $routes->get('dashboard/berita', 'Admin::berita');
 $routes->get('dashboard/keuangan', 'Admin::keuangan');

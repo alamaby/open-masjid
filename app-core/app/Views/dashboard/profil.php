@@ -20,7 +20,22 @@
                 <p class="text-[#608a7e] text-xs mt-2 italic">Semakin lengkap profil, semakin mudah transparansi & koordinasi.</p>
             </div>
         </div>
+
+        <?php if (session()->getFlashdata('success')): ?>
+            <div class="mb-6 p-4 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-xl text-sm font-medium">
+                <?= session()->getFlashdata('success') ?>
+            </div>
+        <?php endif; ?>
+
+        <?php if (session()->getFlashdata('error')): ?>
+            <div class="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-xl text-sm font-medium">
+                <?= session()->getFlashdata('error') ?>
+            </div>
+        <?php endif; ?>
     </div>
+
+    <form action="<?= base_url('dashboard/profil') ?>" method="POST" enctype="multipart/form-data">
+        <?= csrf_field() ?>
 
     <!-- Section 1: Data Utama -->
     <div class="bg-white dark:bg-white/5 rounded-xl border border-[#e5e7eb] dark:border-white/10 overflow-hidden mb-8">
@@ -31,50 +46,66 @@
             <div class="space-y-6">
                 <div>
                     <label class="block text-sm font-semibold text-[#111816] dark:text-white mb-1.5">Nama Masjid <span class="text-red-500">*</span></label>
-                    <input class="w-full rounded-lg border-[#dbe6e3] dark:bg-white/5 dark:border-white/10 focus:border-primary focus:ring-primary" type="text" value="Masjid Agung Al-Azhar"/>
+                    <input name="name" class="w-full rounded-lg border-[#dbe6e3] dark:bg-white/5 dark:border-white/10 focus:border-primary focus:ring-primary" type="text" value="<?= esc($masjid['name'] ?? '') ?>" required/>
                 </div>
                 <div>
                     <label class="block text-sm font-semibold text-[#111816] dark:text-white mb-1.5">Nama Resmi (Sesuai SK)</label>
-                    <input class="w-full rounded-lg border-[#dbe6e3] dark:bg-white/5 dark:border-white/10 focus:border-primary focus:ring-primary" placeholder="Masukkan nama resmi..." type="text"/>
+                    <input name="nama_resmi" class="w-full rounded-lg border-[#dbe6e3] dark:bg-white/5 dark:border-white/10 focus:border-primary focus:ring-primary" placeholder="Masukkan nama resmi..." type="text" value="<?= esc($masjid['nama_resmi'] ?? '') ?>"/>
                 </div>
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-sm font-semibold text-[#111816] dark:text-white mb-1.5">Tahun Berdiri</label>
                         <div class="relative">
-                            <input class="w-full rounded-lg border-[#dbe6e3] dark:bg-white/5 dark:border-white/10 focus:border-primary focus:ring-primary" type="text" value="1953"/>
+                            <input name="tahun_berdiri" class="w-full rounded-lg border-[#dbe6e3] dark:bg-white/5 dark:border-white/10 focus:border-primary focus:ring-primary" type="text" value="<?= esc($masjid['tahun_berdiri'] ?? '') ?>"/>
                             <span class="material-symbols-outlined absolute right-3 top-2 text-[#608a7e] text-xl">calendar_month</span>
                         </div>
                     </div>
                     <div>
                         <label class="block text-sm font-semibold text-[#111816] dark:text-white mb-1.5">Jenis Masjid</label>
-                        <select class="w-full rounded-lg border-[#dbe6e3] dark:bg-white/5 dark:border-white/10 focus:border-primary focus:ring-primary">
-                            <option>Masjid Agung</option>
-                            <option>Masjid Raya</option>
-                            <option>Masjid Besar</option>
-                            <option>Masjid Jami</option>
+                        <select name="jenis_masjid" class="w-full rounded-lg border-[#dbe6e3] dark:bg-white/5 dark:border-white/10 focus:border-primary focus:ring-primary">
+                            <option value="">Pilih Jenis</option>
+                            <option value="Masjid Agung" <?= ($masjid['jenis_masjid'] ?? '') == 'Masjid Agung' ? 'selected' : '' ?>>Masjid Agung</option>
+                            <option value="Masjid Raya" <?= ($masjid['jenis_masjid'] ?? '') == 'Masjid Raya' ? 'selected' : '' ?>>Masjid Raya</option>
+                            <option value="Masjid Besar" <?= ($masjid['jenis_masjid'] ?? '') == 'Masjid Besar' ? 'selected' : '' ?>>Masjid Besar</option>
+                            <option value="Masjid Jami" <?= ($masjid['jenis_masjid'] ?? '') == 'Masjid Jami' ? 'selected' : '' ?>>Masjid Jami</option>
                         </select>
                     </div>
                 </div>
                 <div>
                     <label class="block text-sm font-semibold text-[#111816] dark:text-white mb-1.5">Nomor SK/Legalitas</label>
-                    <input class="w-full rounded-lg border-[#dbe6e3] dark:bg-white/5 dark:border-white/10 focus:border-primary focus:ring-primary" type="text" value="SK-001/KM-AZ/1953"/>
+                    <input name="no_sk" class="w-full rounded-lg border-[#dbe6e3] dark:bg-white/5 dark:border-white/10 focus:border-primary focus:ring-primary" type="text" value="<?= esc($masjid['no_sk'] ?? '') ?>"/>
                 </div>
             </div>
             <div class="space-y-4">
                 <label class="block text-sm font-semibold text-[#111816] dark:text-white">Foto Utama Masjid</label>
                 <div class="relative group cursor-pointer border-2 border-dashed border-[#dbe6e3] dark:border-white/10 rounded-xl overflow-hidden aspect-video flex items-center justify-center bg-[#f0f5f3] dark:bg-white/5">
-                    <div class="absolute inset-0 bg-center bg-no-repeat bg-cover opacity-80" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBKQ3FmqPs0CbptJvTMnfhRmjaJJFWQbAB3Qn7YkG66aN09AnoFqjjLLUS_oW9WRi_P8dB5VKTiZqURZhuNvixP6MX76GaHzWsx-1X7nnpx8A9pngnNbp0HkC3KG3GfvTFF5jWp73vZ9EHRzKGprJyvfccC2SfmvbATrUBQeTEboGqhe-GB_eJfRihGtOsGdf6QGyTMObW2r_M1msOLkCfLMz1tfVcMvHxfe0xhXwxNPKpBdB8SfGKdag5ucGZsmU2fXiqwFB3lBqMi");'></div>
+                    <?php 
+                        $photoUrl = !empty($masjid['foto_utama']) ? $storage->url($masjid['foto_utama']) : 'https://images.unsplash.com/photo-1596701062351-8c2c14d1fdd0?q=80&w=1600&auto=format&fit=crop';
+                    ?>
+                    <div id="photoPreview" class="absolute inset-0 bg-center bg-no-repeat bg-cover opacity-80" style='background-image: url("<?= $photoUrl ?>");'></div>
                     <div class="absolute inset-0 bg-black/40 group-hover:bg-black/50 transition-all flex flex-col items-center justify-center text-white opacity-0 group-hover:opacity-100">
                         <span class="material-symbols-outlined text-4xl mb-2">upload</span>
                         <p class="font-bold">Ubah Foto</p>
                         <p class="text-xs opacity-80">Rasio disarankan 16:9</p>
                     </div>
-                    <div class="z-[1] flex flex-col items-center group-hover:hidden">
+                    <input type="file" name="foto_utama" class="absolute inset-0 opacity-0 cursor-pointer" onchange="previewImage(this)">
+                    <div class="z-[1] flex flex-col items-center group-hover:hidden <?= !empty($masjid['foto_utama']) ? 'hidden' : '' ?>">
                         <span class="material-symbols-outlined text-[#608a7e] text-3xl">add_a_photo</span>
                     </div>
                 </div>
                 <p class="text-xs text-[#608a7e]">Maksimal 5MB (JPG, PNG). Gunakan foto terbaik masjid Anda tampak depan.</p>
             </div>
+            <script>
+                function previewImage(input) {
+                    if (input.files && input.files[0]) {
+                        var reader = new FileReader();
+                        reader.onload = function(e) {
+                            document.getElementById('photoPreview').style.backgroundImage = 'url(' + e.target.result + ')';
+                        }
+                        reader.readAsDataURL(input.files[0]);
+                    }
+                }
+            </script>
         </div>
     </div>
 
@@ -88,32 +119,24 @@
                 <div class="lg:col-span-7 space-y-6">
                     <div>
                         <label class="block text-sm font-semibold text-[#111816] dark:text-white mb-1.5">Alamat Lengkap</label>
-                        <textarea class="w-full rounded-lg border-[#dbe6e3] dark:bg-white/5 dark:border-white/10 focus:border-primary focus:ring-primary" rows="3">Jl. Sisingamangaraja No.1, RT.2/RW.1, Selong, Kec. Kby. Baru, Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12110</textarea>
+                        <textarea name="address" class="w-full rounded-lg border-[#dbe6e3] dark:bg-white/5 dark:border-white/10 focus:border-primary focus:ring-primary" rows="3"><?= esc($masjid['address'] ?? '') ?></textarea>
                     </div>
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label class="block text-sm font-semibold text-[#111816] dark:text-white mb-1.5">Provinsi</label>
-                            <select class="w-full rounded-lg border-[#dbe6e3] dark:bg-white/5 dark:border-white/10 focus:border-primary focus:ring-primary">
-                                <option>DKI Jakarta</option>
-                            </select>
+                            <input name="provinsi" class="w-full rounded-lg border-[#dbe6e3] dark:bg-white/5 dark:border-white/10 focus:border-primary focus:ring-primary" type="text" value="<?= esc($masjid['provinsi'] ?? '') ?>"/>
                         </div>
                         <div>
                             <label class="block text-sm font-semibold text-[#111816] dark:text-white mb-1.5">Kota/Kabupaten</label>
-                            <select class="w-full rounded-lg border-[#dbe6e3] dark:bg-white/5 dark:border-white/10 focus:border-primary focus:ring-primary">
-                                <option>Jakarta Selatan</option>
-                            </select>
+                            <input name="kabupaten" class="w-full rounded-lg border-[#dbe6e3] dark:bg-white/5 dark:border-white/10 focus:border-primary focus:ring-primary" type="text" value="<?= esc($masjid['kabupaten'] ?? '') ?>"/>
                         </div>
                         <div>
                             <label class="block text-sm font-semibold text-[#111816] dark:text-white mb-1.5">Kecamatan</label>
-                            <select class="w-full rounded-lg border-[#dbe6e3] dark:bg-white/5 dark:border-white/10 focus:border-primary focus:ring-primary">
-                                <option>Kebayoran Baru</option>
-                            </select>
+                            <input name="kecamatan" class="w-full rounded-lg border-[#dbe6e3] dark:bg-white/5 dark:border-white/10 focus:border-primary focus:ring-primary" type="text" value="<?= esc($masjid['kecamatan'] ?? '') ?>"/>
                         </div>
                         <div>
                             <label class="block text-sm font-semibold text-[#111816] dark:text-white mb-1.5">Kelurahan</label>
-                            <select class="w-full rounded-lg border-[#dbe6e3] dark:bg-white/5 dark:border-white/10 focus:border-primary focus:ring-primary">
-                                <option>Selong</option>
-                            </select>
+                            <input name="kelurahan" class="w-full rounded-lg border-[#dbe6e3] dark:bg-white/5 dark:border-white/10 focus:border-primary focus:ring-primary" type="text" value="<?= esc($masjid['kelurahan'] ?? '') ?>"/>
                         </div>
                     </div>
                 </div>
@@ -185,15 +208,18 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-[#e5e7eb] dark:divide-white/10">
+                    <?php foreach ($pengurus as $p): ?>
                     <tr class="hover:bg-[#f0f5f3]/50 dark:hover:bg-white/5 transition-colors">
                         <td class="px-6 py-4">
                             <div class="flex items-center gap-3">
-                                <div class="bg-center bg-no-repeat bg-cover rounded-full size-8" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCTGfNQTJFuZjz58RhEmlcGP3CN-0flU7Zz_vkQ5V8OjqP1qfOOGvzphiHQrvYU8bM7eqV4hnJePMICbvIldrEj49BhI4kRv36fvKb2l5iGu4gdvWOvtZUgNYrQckmyGvAeDscxWwOIgcw16IXRViVjqYGLclZg3xc9Dq90ZJNyqgxkCoTPD1aVOu3QREJDmMBZjlbyo56AucKYCxnVeRlQsXdEotdcxJr8Mz4NC4J5jhK-N6oWgWJP2LiMhLEy5Zr-vPYCkqmyk9Yb");'></div>
-                                <span class="text-sm font-semibold text-[#111816] dark:text-white">H. Ahmad Fauzi</span>
+                                <div class="bg-center bg-no-repeat bg-cover rounded-full size-8 bg-slate-200 flex items-center justify-center">
+                                    <span class="material-symbols-outlined text-slate-400 text-sm">person</span>
+                                </div>
+                                <span class="text-sm font-semibold text-[#111816] dark:text-white"><?= esc($p['user_name']) ?></span>
                             </div>
                         </td>
-                        <td class="px-6 py-4 text-sm text-[#608a7e]">Ketua Takmir</td>
-                        <td class="px-6 py-4 text-sm text-[#111816] dark:text-white">0812-3456-7890</td>
+                        <td class="px-6 py-4 text-sm text-[#608a7e]"><?= esc($p['role'] == 'pengurus' ? 'Pengurus' : $p['role']) ?></td>
+                        <td class="px-6 py-4 text-sm text-[#111816] dark:text-white"><?= esc($p['user_phone'] ?? '-') ?></td>
                         <td class="px-6 py-4">
                             <div class="flex justify-center">
                                 <span class="px-2.5 py-1 bg-green-100 dark:bg-green-500/20 text-green-700 dark:text-green-400 text-xs font-bold rounded-full">Aktif</span>
@@ -205,26 +231,12 @@
                             </button>
                         </td>
                     </tr>
-                    <tr class="hover:bg-[#f0f5f3]/50 dark:hover:bg-white/5 transition-colors">
-                        <td class="px-6 py-4">
-                            <div class="flex items-center gap-3">
-                                <div class="bg-center bg-no-repeat bg-cover rounded-full size-8" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBa9dW8YioxF7Oq1ibVt7PEr0wSevxWK8RypRbwhSN8imUO01yoVNoZXk9v8ObJm62_L07H9sz54xgC4GhCxZHByMFDSwIMf31aw9Zbhle3Nhro8S76YRCPCVQHaY2GZxEp62Xfvgx11gEjYR-BoZ_Wib4Gs1Ph7OGJUyY7JXVNIuZRN79YZ-bmcZaeFUWGUjU0eLyr2tobID1vhLWHS_Kc8LtaCIUupyHfsjzt_l1XRScCDDxvVPOwqJtjjqC5BnZQ1ZdjMSixEN1B");'></div>
-                                <span class="text-sm font-semibold text-[#111816] dark:text-white">Drs. H. Bambang S.</span>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4 text-sm text-[#608a7e]">Bendahara</td>
-                        <td class="px-6 py-4 text-sm text-[#111816] dark:text-white">0812-9988-7766</td>
-                        <td class="px-6 py-4">
-                            <div class="flex justify-center">
-                                <span class="px-2.5 py-1 bg-green-100 dark:bg-green-500/20 text-green-700 dark:text-green-400 text-xs font-bold rounded-full">Aktif</span>
-                            </div>
-                        </td>
-                        <td class="px-6 py-4 text-right">
-                            <button class="text-[#608a7e] hover:text-primary transition-colors">
-                                <span class="material-symbols-outlined">edit</span>
-                            </button>
-                        </td>
+                    <?php endforeach; ?>
+                    <?php if (empty($pengurus)): ?>
+                    <tr>
+                        <td colspan="5" class="px-6 py-8 text-center text-slate-500 text-sm">Belum ada pengurus terdaftar.</td>
                     </tr>
+                    <?php endif; ?>
                 </tbody>
             </table>
         </div>
@@ -244,11 +256,11 @@
             <div class="p-8 space-y-6">
                 <div>
                     <label class="block text-sm font-semibold text-[#111816] dark:text-white mb-2">Visi Masjid</label>
-                    <textarea class="w-full rounded-lg border-[#dbe6e3] dark:bg-white/5 dark:border-white/10 focus:border-primary focus:ring-primary" placeholder="Tuliskan visi utama masjid..." rows="3"></textarea>
+                    <textarea name="visi" class="w-full rounded-lg border-[#dbe6e3] dark:bg-white/5 dark:border-white/10 focus:border-primary focus:ring-primary" placeholder="Tuliskan visi utama masjid..." rows="3"><?= esc($masjid['visi'] ?? '') ?></textarea>
                 </div>
                 <div>
                     <label class="block text-sm font-semibold text-[#111816] dark:text-white mb-2">Misi Masjid</label>
-                    <textarea class="w-full rounded-lg border-[#dbe6e3] dark:bg-white/5 dark:border-white/10 focus:border-primary focus:ring-primary" placeholder="Tuliskan misi-misi masjid (pisahkan dengan baris baru)..." rows="4"></textarea>
+                    <textarea name="misi" class="w-full rounded-lg border-[#dbe6e3] dark:bg-white/5 dark:border-white/10 focus:border-primary focus:ring-primary" placeholder="Tuliskan misi-misi masjid (pisahkan dengan baris baru)..." rows="4"><?= esc($masjid['misi'] ?? '') ?></textarea>
                 </div>
             </div>
         </div>
@@ -304,13 +316,14 @@
             </a>
         </div>
         <div class="flex items-center gap-4">
-            <button class="px-6 py-2.5 text-[#608a7e] font-bold text-sm hover:bg-[#f0f5f3] dark:hover:bg-white/5 rounded-lg transition-colors">
+            <button type="button" class="px-6 py-2.5 text-[#608a7e] font-bold text-sm hover:bg-[#f0f5f3] dark:hover:bg-white/5 rounded-lg transition-colors">
                 Batalkan
             </button>
-            <button class="px-8 py-2.5 bg-primary hover:bg-primary/90 text-white font-bold text-sm rounded-lg shadow-lg shadow-primary/20 transition-all">
+            <button type="submit" class="px-8 py-2.5 bg-primary hover:bg-primary/90 text-white font-bold text-sm rounded-lg shadow-lg shadow-primary/20 transition-all">
                 Simpan Perubahan
             </button>
         </div>
     </div>
 </footer>
+</form>
 <?= $this->endSection() ?>
