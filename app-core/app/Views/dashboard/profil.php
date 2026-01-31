@@ -308,9 +308,9 @@
         <div class="flex items-center gap-6">
             <div class="hidden sm:flex items-center gap-3">
                 <div class="w-24 h-2 bg-[#dbe6e3] dark:bg-white/10 rounded-full overflow-hidden">
-                    <div class="h-full bg-primary" style="width: 70%;"></div>
+                    <div class="h-full bg-primary" style="width: <?= $percentage ?>%;"></div>
                 </div>
-                <span class="text-sm font-bold text-primary">70% Lengkap</span>
+                <span class="text-sm font-bold text-primary"><?= $percentage ?>% Lengkap</span>
             </div>
             <a class="text-sm font-bold text-primary hover:underline flex items-center gap-1.5" href="<?= base_url('/') ?>">
                 <span class="material-symbols-outlined text-lg">visibility</span>

@@ -31,11 +31,26 @@ class Admin extends BaseController
             ->where('masjid_id', $masjidId)
             ->get()->getResultArray();
 
+        // Calculate completion percentage
+        $mandatoryFields = [
+            'name', 'nama_resmi', 'jenis_masjid', 'tahun_berdiri', 
+            'address', 'provinsi', 'kabupaten', 'kecamatan', 'kelurahan', 
+            'visi', 'misi', 'foto_utama'
+        ];
+        $filledCount = 0;
+        foreach ($mandatoryFields as $field) {
+            if (!empty($masjid[$field])) {
+                $filledCount++;
+            }
+        }
+        $percentage = ($filledCount / count($mandatoryFields)) * 100;
+
         return view('dashboard/profil', [
-            'title'    => 'Profil Masjid - Masj.id',
-            'masjid'   => $masjid,
-            'pengurus' => $pengurus,
-            'storage'  => $storage
+            'title'      => 'Profil Masjid - Masj.id',
+            'masjid'     => $masjid,
+            'pengurus'   => $pengurus,
+            'storage'    => $storage,
+            'percentage' => round($percentage)
         ]);
     }
 
