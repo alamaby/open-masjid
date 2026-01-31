@@ -267,7 +267,7 @@
             </script>
             <script async defer src="https://maps.googleapis.com/maps/api/js?key=<?= env('GOOGLE_MAPS_API_KEY') ?>&callback=initMap"></script>
             </div>
-            <div class="mt-8 pt-8 border-t border-[#e5e7eb] dark:border-white/10">
+            <div class="mt-8 pt-8 border-t border-[#e5e7eb] dark:border-white/10 px-8 pb-8">
                 <h3 class="text-sm font-bold text-[#111816] dark:text-white mb-4">Wilayah Layanan</h3>
                 <div class="flex flex-wrap gap-2 mb-6">
                     <span class="px-4 py-1.5 bg-primary/10 text-primary border border-primary/20 rounded-full text-sm font-medium flex items-center gap-2">
