@@ -38,9 +38,17 @@ $routes->post('dashboard/berita/save', 'Admin::saveBerita');
 $routes->post('dashboard/berita/delete', 'Admin::deleteBerita');
 $routes->post('dashboard/berita/category/save', 'Admin::saveNewsCategory');
 $routes->post('dashboard/berita/category/delete', 'Admin::deleteNewsCategory');
+$routes->get('dashboard/program', 'Admin::program');
+$routes->get('dashboard/program/create', 'Admin::createProgram');
+$routes->get('dashboard/program/edit/(:num)', 'Admin::editProgram/$1');
+$routes->post('dashboard/program/save', 'Admin::saveProgram');
+$routes->get('dashboard/program/delete/(:num)', 'Admin::deleteProgram/$1');
+
 $routes->get('dashboard/keuangan', 'Admin::keuangan');
 
 // Public Profile (Catch-all)
 $routes->get('(:any)/berita', 'Home::newsList/$1');
 $routes->get('(:any)/berita/(:any)', 'Home::newsDetail/$1/$2');
+$routes->get('(:any)/program', 'Home::programList/$1');
+$routes->get('(:any)/program/(:any)', 'Home::programDetail/$1/$2');
 $routes->get('(:any)', 'Home::masjid/$1');

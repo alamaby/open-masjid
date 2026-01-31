@@ -195,10 +195,6 @@ class Admin extends BaseController
         return redirect()->back()->withInput()->with('error', 'Gagal memperbarui profil.');
     }
 
-    public function program(): string
-    {
-        return view('dashboard/program', ['title' => 'Manajemen Program & Kegiatan - Masj.id']);
-    }
 
     public function berita(): string
     {
@@ -547,5 +543,118 @@ class Admin extends BaseController
         }
 
         return $this->response->setJSON(['status' => 'error', 'message' => 'Foto tidak ditemukan.']);
+    }
+
+    public function program(): string
+    {
+        $masjidId = session()->get('masjid_id');
+        $programModel = new \App\Models\MasjidProgramModel();
+        
+        $programs = $programModel->where('masjid_id', $masjidId)
+            ->orderBy('date_start', 'DESC')
+            ->findAll();
+
+        return view('dashboard/program/index', [
+            'title'    => 'Program & Kegiatan - Masj.id',
+            'programs' => $programs,
+            'storage'  => new Storage()
+        ]);
+    }
+
+    public function createProgram()
+    {
+        return view('dashboard/program/form', [
+            'title'   => 'Buat Program Baru - Masj.id',
+            'program' => null,
+            'storage' => new Storage()
+        ]);
+    }
+
+    public function editProgram($id)
+    {
+        $masjidId = session()->get('masjid_id');
+        $programModel = new \App\Models\MasjidProgramModel();
+        $program = $programModel->where(['id' => $id, 'masjid_id' => $masjidId])->first();
+
+        if (!$program) {
+            return redirect()->to('dashboard/program')->with('error', 'Program tidak ditemukan.');
+        }
+
+        return view('dashboard/program/form', [
+            'title'   => 'Edit Program - Masj.id',
+            'program' => $program,
+            'storage' => new Storage()
+        ]);
+    }
+
+    public function saveProgram()
+    {
+        $masjidId = session()->get('masjid_id');
+        $programModel = new \App\Models\MasjidProgramModel();
+        $programId = $this->request->getPost('id');
+
+        $slugPrefix = url_title($this->request->getPost('title'), '-', true);
+        if (!$programId) {
+            $slug = $slugPrefix . '-' . substr(md5(uniqid()), 0, 6);
+        } else {
+            $oldProgram = $programModel->find($programId);
+            $slug = $oldProgram['slug'] ?? ($slugPrefix . '-' . substr(md5(uniqid()), 0, 6));
+        }
+
+        $data = [
+            'masjid_id'         => $masjidId,
+            'title'             => $this->request->getPost('title'),
+            'slug'              => $slug,
+            'description'       => $this->request->getPost('description'),
+            'date_start'        => $this->request->getPost('date_start'),
+            'date_end'          => $this->request->getPost('date_end') ?: null,
+            'location'          => $this->request->getPost('location'),
+            'registration_link' => $this->request->getPost('registration_link'),
+            'quota'             => $this->request->getPost('quota') ?: null,
+            'status'            => $this->request->getPost('status') ?: 'published'
+        ];
+
+        // Handle Thumbnail
+        $file = $this->request->getFile('thumbnail');
+        if ($file && $file->isValid() && !$file->hasMoved()) {
+            $storage = new Storage();
+            if ($programId) {
+                $oldProgram = $programModel->find($programId);
+                if (!empty($oldProgram['thumbnail'])) {
+                    $storage->delete($oldProgram['thumbnail']);
+                }
+            }
+            $uploadPath = $storage->upload($file, 'images/programs');
+            if ($uploadPath) {
+                $data['thumbnail'] = $uploadPath;
+            }
+        }
+
+        if ($programId) {
+            $programModel->update($programId, $data);
+            $message = 'Program berhasil diperbarui.';
+        } else {
+            $programModel->insert($data);
+            $message = 'Program baru berhasil ditambahkan.';
+        }
+
+        return redirect()->to('dashboard/program')->with('success', $message);
+    }
+
+    public function deleteProgram($id)
+    {
+        $masjidId = session()->get('masjid_id');
+        $programModel = new \App\Models\MasjidProgramModel();
+        $program = $programModel->where(['id' => $id, 'masjid_id' => $masjidId])->first();
+
+        if ($program) {
+            if (!empty($program['thumbnail'])) {
+                (new Storage())->delete($program['thumbnail']);
+            }
+            $programModel->delete($id);
+            return redirect()->to('dashboard/program')->with('success', 'Program berhasil dihapus.');
+        }
+
+        return redirect()->to('dashboard/program')->with('error', 'Program tidak ditemukan.');
     }
 }

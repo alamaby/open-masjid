@@ -220,16 +220,54 @@
 </section>
 <?php endif; ?>
 
-<!-- Program Section (Placeholder) -->
+<!-- Program Section -->
 <?php if ($masjid['menu_program'] ?? 1): ?>
 <section id="program" class="py-24 px-6 bg-white dark:bg-background-dark overflow-hidden">
-    <div class="max-w-[1200px] mx-auto text-center">
-        <h2 class="text-sm font-bold text-primary uppercase tracking-[0.2em] mb-3">Layanan Kami</h2>
-        <h3 class="text-3xl md:text-5xl font-black mb-8">Program Unggulan</h3>
-        <div class="p-12 bg-background-light dark:bg-[#11241d] rounded-[2.5rem] border border-dashed border-[#dbe6e1] dark:border-[#1e3a2f]">
-            <span class="material-symbols-outlined text-6xl text-primary/20 mb-4 font-light">volunteer_activism</span>
-            <p class="text-[#608a7e] font-medium">Informasi program sedang disiapkan oleh pengurus masjid.</p>
+    <div class="max-w-[1200px] mx-auto">
+        <div class="flex flex-col md:flex-row justify-between items-end gap-8 mb-16">
+            <div>
+                <h2 class="text-sm font-bold text-primary uppercase tracking-[0.2em] mb-3">Layanan Kami</h2>
+                <h3 class="text-3xl md:text-5xl font-black">Agenda & Kegiatan</h3>
+            </div>
+            <a href="<?= base_url($masjid['username'] . '/program') ?>" class="inline-flex items-center gap-2 text-primary font-bold hover:underline mb-2">
+                Lihat Semua Agenda
+                <span class="material-symbols-outlined text-sm">arrow_forward</span>
+            </a>
         </div>
+
+        <?php if (empty($programs)): ?>
+            <div class="p-12 bg-background-light dark:bg-white/5 rounded-[2.5rem] border border-dashed border-[#dbe6e1] dark:border-white/10 text-center">
+                <span class="material-symbols-outlined text-6xl text-primary/20 mb-4 font-light">volunteer_activism</span>
+                <p class="text-[#608a7e] font-medium">Belum ada agenda kegiatan dalam waktu dekat.</p>
+            </div>
+        <?php else: ?>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <?php foreach ($programs as $item): ?>
+                    <a href="<?= base_url($masjid['username'] . '/program/' . $item['slug']) ?>" class="group bg-white dark:bg-white/5 rounded-[2.5rem] border border-gray-100 dark:border-white/10 p-2 hover:shadow-2xl transition-all duration-500">
+                        <div class="aspect-[4/3] rounded-[2rem] overflow-hidden relative mb-6">
+                            <?php if (!empty($item['thumbnail'])): ?>
+                                <img src="<?= $storage->url($item['thumbnail']) ?>" class="size-full object-cover transition-transform duration-700 group-hover:scale-110">
+                            <?php else: ?>
+                                <div class="size-full bg-slate-50 dark:bg-white/5 flex items-center justify-center text-slate-300">
+                                    <span class="material-symbols-outlined text-5xl">event</span>
+                                </div>
+                            <?php endif; ?>
+                            <div class="absolute top-4 left-4 bg-white/90 dark:bg-background-dark/90 backdrop-blur-md px-3 py-1.5 rounded-xl flex items-center gap-1.5 shadow-sm">
+                                <span class="material-symbols-outlined text-xs text-primary">calendar_today</span>
+                                <span class="text-[10px] font-bold"><?= date('d M Y', strtotime($item['date_start'])) ?></span>
+                            </div>
+                        </div>
+                        <div class="px-6 pb-6 mt-4">
+                            <h4 class="text-xl font-bold mb-4 line-clamp-2 group-hover:text-primary transition-colors"><?= esc($item['title']) ?></h4>
+                            <div class="flex items-center gap-2 text-xs text-[#608a7e]">
+                                <span class="material-symbols-outlined text-sm">location_on</span>
+                                <?= esc($item['location']) ?>
+                            </div>
+                        </div>
+                    </a>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
     </div>
 </section>
 <?php endif; ?>

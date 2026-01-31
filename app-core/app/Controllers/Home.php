@@ -96,6 +96,13 @@ class Home extends BaseController
             ->limit(3)
             ->findAll();
 
+        $programModel = new \App\Models\MasjidProgramModel();
+        $programs = $programModel->where(['masjid_id' => $masjid['id'], 'status' => 'published'])
+            ->where('date_start >=', date('Y-m-d H:i:s'))
+            ->orderBy('date_start', 'ASC')
+            ->limit(3)
+            ->findAll();
+
         $storage = new \App\Libraries\Storage();
 
         return view('public/masjid_profile', [
@@ -105,6 +112,7 @@ class Home extends BaseController
             'gallery'  => $gallery,
             'wilayah'  => $wilayah,
             'news'     => $news,
+            'programs' => $programs,
             'storage'  => $storage
         ]);
     }
@@ -173,6 +181,52 @@ class Home extends BaseController
             'categories' => $categories,
             'activeCat'  => $catSlug,
             'storage'    => new \App\Libraries\Storage()
+        ]);
+    }
+
+    public function programList($username): string
+    {
+        $masjidModel = new \App\Models\MasjidModel();
+        $masjid = $masjidModel->where('username', $username)->first();
+
+        if (!$masjid) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound("Masjid tidak ditemukan.");
+        }
+
+        $programModel = new \App\Models\MasjidProgramModel();
+        $programs = $programModel->where(['masjid_id' => $masjid['id'], 'status' => 'published'])
+            ->orderBy('date_start', 'ASC')
+            ->findAll();
+
+        return view('public/program_list', [
+            'title'    => 'Program & Kegiatan - ' . esc($masjid['name']),
+            'masjid'   => $masjid,
+            'programs' => $programs,
+            'storage'  => new \App\Libraries\Storage()
+        ]);
+    }
+
+    public function programDetail($username, $slug): string
+    {
+        $masjidModel = new \App\Models\MasjidModel();
+        $masjid = $masjidModel->where('username', $username)->first();
+
+        if (!$masjid) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound("Masjid tidak ditemukan.");
+        }
+
+        $programModel = new \App\Models\MasjidProgramModel();
+        $program = $programModel->where(['masjid_id' => $masjid['id'], 'slug' => $slug])->first();
+
+        if (!$program) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound("Program tidak ditemukan.");
+        }
+
+        return view('public/program_detail', [
+            'title'   => esc($program['title']) . ' - ' . esc($masjid['name']),
+            'masjid'  => $masjid,
+            'program' => $program,
+            'storage' => new \App\Libraries\Storage()
         ]);
     }
 }
