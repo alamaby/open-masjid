@@ -126,11 +126,21 @@
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label class="block text-sm font-semibold text-[#111816] dark:text-white mb-1.5">Provinsi</label>
-                            <input name="provinsi" class="w-full rounded-lg border-[#dbe6e3] dark:bg-white/5 dark:border-white/10 focus:border-primary focus:ring-primary" type="text" value="<?= esc($masjid['provinsi'] ?? '') ?>"/>
+                            <select id="provinceSelect" name="provinsi" class="w-full rounded-lg border-[#dbe6e3] dark:bg-white/5 dark:border-white/10 focus:border-primary focus:ring-primary" onchange="loadRegencies(this.value)">
+                                <option value="">Pilih Provinsi</option>
+                                <?php foreach ($provinces as $p): ?>
+                                    <option value="<?= $p['id'] ?>" data-name="<?= esc($p['name']) ?>" <?= ($masjid['provinsi'] ?? '') == $p['name'] ? 'selected' : '' ?>><?= esc($p['name']) ?></option>
+                                <?php endforeach; ?>
+                            </select>
                         </div>
                         <div>
                             <label class="block text-sm font-semibold text-[#111816] dark:text-white mb-1.5">Kota/Kabupaten</label>
-                            <input name="kabupaten" class="w-full rounded-lg border-[#dbe6e3] dark:bg-white/5 dark:border-white/10 focus:border-primary focus:ring-primary" type="text" value="<?= esc($masjid['kabupaten'] ?? '') ?>"/>
+                            <select id="regencySelect" name="kabupaten" class="w-full rounded-lg border-[#dbe6e3] dark:bg-white/5 dark:border-white/10 focus:border-primary focus:ring-primary">
+                                <option value="">Pilih Kota/Kabupaten</option>
+                                <?php if (!empty($masjid['kabupaten'])): ?>
+                                    <option value="<?= esc($masjid['kabupaten']) ?>" selected><?= esc($masjid['kabupaten']) ?></option>
+                                <?php endif; ?>
+                            </select>
                         </div>
                         <div>
                             <label class="block text-sm font-semibold text-[#111816] dark:text-white mb-1.5">Kecamatan</label>
@@ -142,6 +152,42 @@
                         </div>
                     </div>
                 </div>
+            </div>
+            <script>
+                async function loadRegencies(provinceId, selectedName = null) {
+                    const regencySelect = document.getElementById('regencySelect');
+                    if (!provinceId) {
+                        regencySelect.innerHTML = '<option value="">Pilih Kota/Kabupaten</option>';
+                        return;
+                    }
+
+                    try {
+                        const response = await fetch('<?= base_url('dashboard/regencies') ?>/' + provinceId);
+                        const regencies = await response.json();
+                        
+                        regencySelect.innerHTML = '<option value="">Pilih Kota/Kabupaten</option>';
+                        regencies.forEach(r => {
+                            const option = document.createElement('option');
+                            option.value = r.name; // Save the name as the value to match current schema
+                            option.textContent = r.name;
+                            if (selectedName && r.name === selectedName) {
+                                option.selected = true;
+                            }
+                            regencySelect.appendChild(option);
+                        });
+                    } catch (error) {
+                        console.error('Error loading regencies:', error);
+                    }
+                }
+
+                // Initial load if province is selected
+                document.addEventListener('DOMContentLoaded', function() {
+                    const provinceSelect = document.getElementById('provinceSelect');
+                    if (provinceSelect.value) {
+                        loadRegencies(provinceSelect.value, '<?= esc($masjid['kabupaten'] ?? '') ?>');
+                    }
+                });
+            </script>
                 <div class="lg:col-span-5 space-y-6">
                     <label class="block text-sm font-semibold text-[#111816] dark:text-white mb-1.5">Titik Lokasi (Pin Map)</label>
                     <div class="relative rounded-xl overflow-hidden h-[240px] bg-[#f0f5f3] dark:bg-white/5 border border-[#e5e7eb] dark:border-white/10">

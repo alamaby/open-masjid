@@ -3,6 +3,8 @@
 namespace App\Controllers;
 
 use App\Models\MasjidModel;
+use App\Models\ProvinceModel;
+use App\Models\RegencyModel;
 use App\Libraries\Storage;
 
 class Admin extends BaseController
@@ -45,12 +47,17 @@ class Admin extends BaseController
         }
         $percentage = ($filledCount / count($mandatoryFields)) * 100;
 
+        // Fetch Provinces
+        $provinceModel = new ProvinceModel();
+        $provinces = $provinceModel->findAll();
+
         return view('dashboard/profil', [
             'title'      => 'Profil Masjid - Masj.id',
             'masjid'     => $masjid,
             'pengurus'   => $pengurus,
             'storage'    => $storage,
-            'percentage' => round($percentage)
+            'percentage' => round($percentage),
+            'provinces'  => $provinces
         ]);
     }
 
@@ -82,6 +89,15 @@ class Admin extends BaseController
         // Remove ID if present to prevent primary key issues
         unset($data['id']);
 
+        // Convert Provinsi ID to Name if it's numeric
+        if (isset($data['provinsi']) && is_numeric($data['provinsi'])) {
+            $provinceModel = new ProvinceModel();
+            $province = $provinceModel->find($data['provinsi']);
+            if ($province) {
+                $data['provinsi'] = $province['name'];
+            }
+        }
+
         if ($masjidModel->update($masjidId, $data)) {
             // Update session if name changed
             if (isset($data['name'])) {
@@ -106,5 +122,12 @@ class Admin extends BaseController
     public function keuangan(): string
     {
         return view('dashboard/keuangan', ['title' => 'Manajemen Keuangan - Masj.id']);
+    }
+
+    public function getRegencies($provinceId)
+    {
+        $regencyModel = new RegencyModel();
+        $regencies = $regencyModel->where('province_id', $provinceId)->findAll();
+        return $this->response->setJSON($regencies);
     }
 }
