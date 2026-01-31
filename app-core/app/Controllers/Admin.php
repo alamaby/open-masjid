@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\MasjidModel;
+use App\Models\MasjidWilayahModel;
 use App\Models\ProvinceModel;
 use App\Models\RegencyModel;
 use App\Libraries\Storage;
@@ -51,13 +52,18 @@ class Admin extends BaseController
         $provinceModel = new ProvinceModel();
         $provinces = $provinceModel->findAll();
 
+        // Fetch Service Areas (Wilayah Layanan)
+        $wilayahModel = new MasjidWilayahModel();
+        $wilayah = $wilayahModel->where('masjid_id', $masjidId)->findAll();
+
         return view('dashboard/profil', [
             'title'      => 'Profil Masjid - Masj.id',
             'masjid'     => $masjid,
             'pengurus'   => $pengurus,
             'storage'    => $storage,
             'percentage' => round($percentage),
-            'provinces'  => $provinces
+            'provinces'  => $provinces,
+            'wilayah'    => $wilayah
         ]);
     }
 
@@ -98,7 +104,33 @@ class Admin extends BaseController
             }
         }
 
+        // Handle External Service Toggle
+        $data['is_external_service'] = isset($data['is_external_service']) ? 1 : 0;
+
+        // Handle Wilayah Layanan (Service Areas)
+        $wilayahData = $data['wilayah'] ?? [];
+        unset($data['wilayah']);
+
         if ($masjidModel->update($masjidId, $data)) {
+            // Update Wilayah Layanan
+            $wilayahModel = new MasjidWilayahModel();
+            $wilayahModel->where('masjid_id', $masjidId)->delete();
+            
+            if (!empty($wilayahData)) {
+                $batchWilayah = [];
+                foreach ($wilayahData as $wName) {
+                    if (!empty(trim($wName))) {
+                        $batchWilayah[] = [
+                            'masjid_id' => $masjidId,
+                            'name'      => trim($wName)
+                        ];
+                    }
+                }
+                if (!empty($batchWilayah)) {
+                    $wilayahModel->insertBatch($batchWilayah);
+                }
+            }
+
             // Update session if name changed
             if (isset($data['name'])) {
                 session()->set('masjid_name', $data['name']);

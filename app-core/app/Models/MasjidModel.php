@@ -15,7 +15,7 @@ class MasjidModel extends Model
     protected $allowedFields    = [
         'name', 'nama_resmi', 'username', 'tahun_berdiri', 'jenis_masjid', 
         'no_sk', 'address', 'provinsi', 'kabupaten', 'kecamatan', 'kelurahan', 
-        'visi', 'misi', 'foto_utama'
+        'visi', 'misi', 'foto_utama', 'latitude', 'longitude', 'is_external_service'
     ];
 
     // Dates

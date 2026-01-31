@@ -269,17 +269,16 @@
             </div>
             <div class="mt-8 pt-8 border-t border-[#e5e7eb] dark:border-white/10 px-8 pb-8">
                 <h3 class="text-sm font-bold text-[#111816] dark:text-white mb-4">Wilayah Layanan</h3>
-                <div class="flex flex-wrap gap-2 mb-6">
-                    <span class="px-4 py-1.5 bg-primary/10 text-primary border border-primary/20 rounded-full text-sm font-medium flex items-center gap-2">
-                        RW 01 Selong <span class="material-symbols-outlined text-sm cursor-pointer">close</span>
+                <div id="serviceAreaContainer" class="flex flex-wrap gap-2 mb-6">
+                    <?php foreach ($wilayah as $w): ?>
+                    <span class="service-area-badge px-4 py-1.5 bg-primary/10 text-primary border border-primary/20 rounded-full text-sm font-medium flex items-center gap-2">
+                        <?= esc($w['name']) ?>
+                        <input type="hidden" name="wilayah[]" value="<?= esc($w['name']) ?>">
+                        <span class="material-symbols-outlined text-sm cursor-pointer hover:text-red-500" onclick="this.parentElement.remove()">close</span>
                     </span>
-                    <span class="px-4 py-1.5 bg-primary/10 text-primary border border-primary/20 rounded-full text-sm font-medium flex items-center gap-2">
-                        RW 02 Selong <span class="material-symbols-outlined text-sm cursor-pointer">close</span>
-                    </span>
-                    <span class="px-4 py-1.5 bg-primary/10 text-primary border border-primary/20 rounded-full text-sm font-medium flex items-center gap-2">
-                        RW 03 Selong <span class="material-symbols-outlined text-sm cursor-pointer">close</span>
-                    </span>
-                    <button class="px-4 py-1.5 border border-dashed border-[#dbe6e3] rounded-full text-sm font-medium text-[#608a7e] hover:bg-[#f0f5f3] flex items-center gap-1 transition-colors">
+                    <?php endforeach; ?>
+                    
+                    <button type="button" onclick="addServiceArea()" class="px-4 py-1.5 border border-dashed border-[#dbe6e3] rounded-full text-sm font-medium text-[#608a7e] hover:bg-[#f0f5f3] flex items-center gap-1 transition-colors">
                         <span class="material-symbols-outlined text-sm">add</span> Tambah Wilayah
                     </button>
                 </div>
@@ -292,11 +291,26 @@
                         </div>
                     </div>
                     <label class="relative inline-flex items-center cursor-pointer">
-                        <input checked="" class="sr-only peer" type="checkbox"/>
+                        <input name="is_external_service" value="1" <?= ($masjid['is_external_service'] ?? 0) == 1 ? 'checked' : '' ?> class="sr-only peer" type="checkbox"/>
                         <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
                     </label>
                 </div>
             </div>
+            <script>
+                function addServiceArea() {
+                    const name = prompt("Masukkan nama wilayah (contoh: RW 01 Selong):");
+                    if (name && name.trim() !== "") {
+                        const container = document.getElementById('serviceAreaContainer');
+                        const button = event.currentTarget;
+                        
+                        const span = document.createElement('span');
+                        span.className = "service-area-badge px-4 py-1.5 bg-primary/10 text-primary border border-primary/20 rounded-full text-sm font-medium flex items-center gap-2";
+                        span.innerHTML = `${name.trim()} <input type="hidden" name="wilayah[]" value="${name.trim()}"> <span class="material-symbols-outlined text-sm cursor-pointer hover:text-red-500" onclick="this.parentElement.remove()">close</span>`;
+                        
+                        container.insertBefore(span, button);
+                    }
+                }
+            </script>
         </div>
     </div>
 
