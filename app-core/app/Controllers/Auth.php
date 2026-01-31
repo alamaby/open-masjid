@@ -78,6 +78,47 @@ class Auth extends BaseController
         }
     }
 
+    public function login()
+    {
+        $userModel = new UserModel();
+        $email = $this->request->getPost('email');
+        $password = $this->request->getPost('password');
+
+        $user = $userModel->where('email', $email)->first();
+
+        if ($user && password_verify($password, $user['password_hash'])) {
+            $session = session();
+            
+            // Check for Masjid Pengurus role
+            $pengurusModel = new MasjidPengurusModel();
+            $pengurus = $pengurusModel->where('user_id', $user['id'])->first();
+
+            $sessionData = [
+                'isLoggedIn' => true,
+                'user_id'    => $user['id'],
+                'user_name'  => $user['name'],
+                'user_email' => $user['email'],
+            ];
+
+            if ($pengurus) {
+                // Determine Masjid details
+                $masjidModel = new MasjidModel();
+                $masjid = $masjidModel->find($pengurus['masjid_id']);
+                
+                $sessionData['role'] = 'pengurus';
+                $sessionData['masjid_id'] = $pengurus['masjid_id'];
+                $sessionData['masjid_name'] = $masjid['name'] ?? 'Masjid Saya';
+            } else {
+                $sessionData['role'] = 'jamaah';
+            }
+
+            $session->set($sessionData);
+            return redirect()->to('/dashboard')->with('success', 'Selamat datang kembali, ' . $user['name'] . '!');
+        }
+
+        return redirect()->back()->withInput()->with('error', 'Email atau password salah.');
+    }
+
     public function registerJamaah()
     {
         $userModel = new UserModel();

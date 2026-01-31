@@ -57,12 +57,26 @@
                     Selamat datang kembali untuk menyebarkan kebaikan bersama masjid
                 </p>
 </header>
-<form action="#" class="space-y-6">
+
+        <?php if (session()->getFlashdata('error')): ?>
+            <div class="mb-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-xl text-center text-sm font-medium">
+                <?= session()->getFlashdata('error') ?>
+            </div>
+        <?php endif; ?>
+
+        <?php if (session()->getFlashdata('success')): ?>
+            <div class="mb-6 p-4 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-xl text-center text-sm font-medium">
+                <?= session()->getFlashdata('success') ?>
+            </div>
+        <?php endif; ?>
+
+        <form action="<?= base_url('login') ?>" method="POST" class="space-y-6">
+            <?= csrf_field() ?>
 <div class="flex flex-col gap-1.5">
 <label class="text-slate-700 dark:text-slate-300 text-sm font-semibold px-0.5">
                         Email
                     </label>
-<input class="form-input flex w-full rounded-lg text-slate-900 dark:text-white focus:outline-0 focus:ring-4 focus:ring-primary/10 border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800 focus:border-primary h-12 placeholder:text-slate-400 p-4 text-sm font-normal transition-all" placeholder="Masukkan alamat email Anda" type="text"/>
+<input name="email" class="form-input flex w-full rounded-lg text-slate-900 dark:text-white focus:outline-0 focus:ring-4 focus:ring-primary/10 border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800 focus:border-primary h-12 placeholder:text-slate-400 p-4 text-sm font-normal transition-all" placeholder="Masukkan alamat email Anda" type="email" required/>
 </div>
 <div class="flex flex-col gap-1.5">
 <div class="flex justify-between items-center px-0.5">
@@ -74,7 +88,7 @@
                         </a>
 </div>
 <div class="relative flex w-full items-stretch">
-<input class="form-input flex w-full rounded-lg text-slate-900 dark:text-white focus:outline-0 focus:ring-4 focus:ring-primary/10 border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800 focus:border-primary h-12 placeholder:text-slate-400 p-4 pr-12 text-sm font-normal transition-all" placeholder="••••••••" type="password"/>
+<input name="password" class="form-input flex w-full rounded-lg text-slate-900 dark:text-white focus:outline-0 focus:ring-4 focus:ring-primary/10 border border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800 focus:border-primary h-12 placeholder:text-slate-400 p-4 pr-12 text-sm font-normal transition-all" placeholder="••••••••" type="password" required/>
 <button class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200" type="button" onclick="const input = this.previousElementSibling; input.type = input.type === 'password' ? 'text' : 'password'; this.firstElementChild.innerText = input.type === 'password' ? 'visibility' : 'visibility_off';">
 <span class="material-symbols-outlined text-[20px]">visibility</span>
 </button>

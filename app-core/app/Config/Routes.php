@@ -15,6 +15,7 @@ $routes->get('kontak', 'Home::kontak');
 $routes->get('privacy-policy', 'Home::privacy');
 $routes->get('term', 'Home::term');
 $routes->get('/login', 'Home::login');
+$routes->post('/login', 'Auth::login');
 $routes->get('/register', 'Home::register');
 $routes->get('/logout', 'Auth::logout');
 $routes->post('/register/masjid', 'Auth::registerMasjid');
