@@ -54,6 +54,18 @@
 <p class="text-slate-500 mt-3 text-lg" id="page-subtitle">Pilih kategori pendaftaran untuk memulai</p>
 </div>
 
+    <?php if (session()->getFlashdata('error')): ?>
+        <div class="mb-10 p-4 bg-red-50 border border-red-200 text-red-700 rounded-2xl text-center font-medium">
+            <?= session()->getFlashdata('error') ?>
+        </div>
+    <?php endif; ?>
+
+    <?php if (session()->getFlashdata('success')): ?>
+        <div class="mb-10 p-4 bg-emerald-50 border border-emerald-200 text-emerald-700 rounded-2xl text-center font-medium">
+            <?= session()->getFlashdata('success') ?>
+        </div>
+    <?php endif; ?>
+
 <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-10">
     <!-- Role Masjid -->
     <button onclick="setRole('masjid')" id="btn-role-masjid" class="flex items-start gap-5 p-6 bg-white border border-slate-200 rounded-2xl shadow-soft transition-all hover:border-emerald-200 role-card-active group text-left">
@@ -79,7 +91,8 @@
 
 <div class="bg-white rounded-[2.5rem] shadow-card border border-slate-100 p-8 md:p-14">
     <!-- Form Masjid -->
-    <form id="form-masjid" action="#" class="space-y-12">
+    <form id="form-masjid" action="<?= base_url('register/masjid') ?>" method="POST" class="space-y-12">
+        <?= csrf_field() ?>
         <section class="space-y-7">
             <div class="flex items-center gap-3 mb-1">
                 <div class="w-1.5 h-6 bg-primary rounded-full"></div>
@@ -88,7 +101,7 @@
             <div class="grid grid-cols-1 gap-7">
                 <div class="space-y-2.5">
                     <label class="text-sm font-bold text-slate-700 ml-1">Nama Masjid</label>
-                    <input class="w-full h-[54px] px-4 bg-white border border-slate-200 rounded-xl focus:ring-4 focus:ring-primary/5 focus:border-primary transition-all placeholder:text-slate-300 text-slate-900" placeholder="Contoh: Masjid Agung Al-Azhar" type="text"/>
+                    <input name="nama_masjid" class="w-full h-[54px] px-4 bg-white border border-slate-200 rounded-xl focus:ring-4 focus:ring-primary/5 focus:border-primary transition-all placeholder:text-slate-300 text-slate-900" placeholder="Contoh: Masjid Agung Al-Azhar" type="text" required/>
                 </div>
                 <div class="space-y-2.5">
                     <label class="text-sm font-bold text-slate-700 ml-1">Username Masjid</label>
@@ -96,7 +109,7 @@
                         <div class="input-prefix h-[54px] flex items-center px-4 bg-slate-50 border border-r-0 border-slate-200 rounded-l-xl text-slate-400 font-medium transition-colors">
                             masj.id/
                         </div>
-                        <input class="flex-1 h-[54px] px-4 bg-white border border-slate-200 rounded-r-xl focus:ring-4 focus:ring-primary/5 focus:border-primary transition-all placeholder:text-slate-300 text-slate-900 font-medium" placeholder="nama-masjid-anda" type="text"/>
+                        <input name="username_masjid" class="flex-1 h-[54px] px-4 bg-white border border-slate-200 rounded-r-xl focus:ring-4 focus:ring-primary/5 focus:border-primary transition-all placeholder:text-slate-300 text-slate-900 font-medium" placeholder="nama-masjid-anda" type="text" required/>
                         <div class="absolute right-4 flex items-center gap-1.5 bg-white pl-2">
                             <span class="material-symbols-outlined text-emerald-600 text-[18px] fill-1">check_circle</span>
                             <span class="text-[10px] font-bold text-emerald-600 uppercase tracking-[0.1em]">Tersedia</span>
@@ -114,23 +127,23 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-7">
                 <div class="md:col-span-2 space-y-2.5">
                     <label class="text-sm font-bold text-slate-700 ml-1">Nama Lengkap PIC</label>
-                    <input class="w-full h-[54px] px-4 bg-white border border-slate-200 rounded-xl focus:ring-4 focus:ring-primary/5 focus:border-primary transition-all placeholder:text-slate-300 text-slate-900" placeholder="Nama lengkap penanggung jawab" type="text"/>
+                    <input name="nama_pic" class="w-full h-[54px] px-4 bg-white border border-slate-200 rounded-xl focus:ring-4 focus:ring-primary/5 focus:border-primary transition-all placeholder:text-slate-300 text-slate-900" placeholder="Nama lengkap penanggung jawab" type="text" required/>
                 </div>
                 <div class="space-y-2.5">
                     <label class="text-sm font-bold text-slate-700 ml-1">Email</label>
-                    <input class="w-full h-[54px] px-4 bg-white border border-slate-200 rounded-xl focus:ring-4 focus:ring-primary/5 focus:border-primary transition-all placeholder:text-slate-300 text-slate-900" placeholder="nama@email.com" type="email"/>
+                    <input name="email_pic" class="w-full h-[54px] px-4 bg-white border border-slate-200 rounded-xl focus:ring-4 focus:ring-primary/5 focus:border-primary transition-all placeholder:text-slate-300 text-slate-900" placeholder="nama@email.com" type="email" required/>
                 </div>
                 <div class="space-y-2.5">
                     <label class="text-sm font-bold text-slate-700 ml-1">Nomor WhatsApp</label>
                     <div class="relative flex items-center">
                         <span class="absolute left-4 text-slate-400 font-medium">+62</span>
-                        <input class="w-full h-[54px] pl-14 pr-4 bg-white border border-slate-200 rounded-xl focus:ring-4 focus:ring-primary/5 focus:border-primary transition-all placeholder:text-slate-300 text-slate-900" placeholder="8123456789" type="tel"/>
+                        <input name="phone_pic" class="w-full h-[54px] pl-14 pr-4 bg-white border border-slate-200 rounded-xl focus:ring-4 focus:ring-primary/5 focus:border-primary transition-all placeholder:text-slate-300 text-slate-900" placeholder="8123456789" type="tel" required/>
                     </div>
                 </div>
                 <div class="md:col-span-2 space-y-2.5">
                     <label class="text-sm font-bold text-slate-700 ml-1">Kata Sandi</label>
                     <div class="relative flex items-center">
-                        <input class="w-full h-[54px] px-4 bg-white border border-slate-200 rounded-xl focus:ring-4 focus:ring-primary/5 focus:border-primary transition-all placeholder:text-slate-300 text-slate-900" placeholder="Minimal 8 karakter" type="password"/>
+                        <input name="password_pic" class="w-full h-[54px] px-4 bg-white border border-slate-200 rounded-xl focus:ring-4 focus:ring-primary/5 focus:border-primary transition-all placeholder:text-slate-300 text-slate-900" placeholder="Minimal 8 karakter" type="password" required minlength="8"/>
                         <button class="absolute right-4 text-slate-400 hover:text-primary transition-colors flex items-center justify-center" type="button" onclick="togglePassword(this)">
                             <span class="material-symbols-outlined text-[20px]">visibility</span>
                         </button>
@@ -165,7 +178,8 @@
     </form>
 
     <!-- Form Jamaah -->
-    <form id="form-jamaah" action="#" class="space-y-10 hidden">
+    <form id="form-jamaah" action="<?= base_url('register/jamaah') ?>" method="POST" class="space-y-10 hidden">
+        <?= csrf_field() ?>
         <section class="space-y-7">
             <div class="flex items-center gap-3 mb-1">
                 <div class="w-1.5 h-6 bg-primary rounded-full"></div>
@@ -174,25 +188,25 @@
             <div class="grid grid-cols-1 gap-7">
                 <div class="space-y-2.5">
                     <label class="text-sm font-bold text-slate-700 ml-1">Nama Lengkap</label>
-                    <input class="w-full h-[54px] px-4 bg-white border border-slate-200 rounded-xl focus:ring-4 focus:ring-primary/5 focus:border-primary transition-all placeholder:text-slate-300 text-slate-900" placeholder="Masukkan nama lengkap sesuai identitas" type="text"/>
+                    <input name="nama_lengkap" class="w-full h-[54px] px-4 bg-white border border-slate-200 rounded-xl focus:ring-4 focus:ring-primary/5 focus:border-primary transition-all placeholder:text-slate-300 text-slate-900" placeholder="Masukkan nama lengkap sesuai identitas" type="text" required/>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-7">
                     <div class="space-y-2.5">
                         <label class="text-sm font-bold text-slate-700 ml-1">Email</label>
-                        <input class="w-full h-[54px] px-4 bg-white border border-slate-200 rounded-xl focus:ring-4 focus:ring-primary/5 focus:border-primary transition-all placeholder:text-slate-300 text-slate-900" placeholder="nama@email.com" type="email"/>
+                        <input name="email" class="w-full h-[54px] px-4 bg-white border border-slate-200 rounded-xl focus:ring-4 focus:ring-primary/5 focus:border-primary transition-all placeholder:text-slate-300 text-slate-900" placeholder="nama@email.com" type="email" required/>
                     </div>
                     <div class="space-y-2.5">
                         <label class="text-sm font-bold text-slate-700 ml-1">Nomor WhatsApp</label>
                         <div class="relative flex items-center">
                             <span class="absolute left-4 text-slate-400 font-medium">+62</span>
-                            <input class="w-full h-[54px] pl-14 pr-4 bg-white border border-slate-200 rounded-xl focus:ring-4 focus:ring-primary/5 focus:border-primary transition-all placeholder:text-slate-300 text-slate-900" placeholder="8123456789" type="tel"/>
+                            <input name="phone" class="w-full h-[54px] pl-14 pr-4 bg-white border border-slate-200 rounded-xl focus:ring-4 focus:ring-primary/5 focus:border-primary transition-all placeholder:text-slate-300 text-slate-900" placeholder="8123456789" type="tel" required/>
                         </div>
                     </div>
                 </div>
                 <div class="space-y-2.5">
                     <label class="text-sm font-bold text-slate-700 ml-1">Kata Sandi</label>
                     <div class="relative">
-                        <input class="w-full h-[54px] px-4 pr-12 bg-white border border-slate-200 rounded-xl focus:ring-4 focus:ring-primary/5 focus:border-primary transition-all placeholder:text-slate-300 text-slate-900" placeholder="Min. 8 karakter" type="password"/>
+                        <input name="password" class="w-full h-[54px] px-4 pr-12 bg-white border border-slate-200 rounded-xl focus:ring-4 focus:ring-primary/5 focus:border-primary transition-all placeholder:text-slate-300 text-slate-900" placeholder="Min. 8 karakter" type="password" required minlength="8"/>
                         <button class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors" type="button" onclick="togglePassword(this)">
                             <span class="material-symbols-outlined text-[20px]">visibility</span>
                         </button>
