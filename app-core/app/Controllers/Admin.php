@@ -268,6 +268,7 @@ class Admin extends BaseController
             'title'       => $this->request->getPost('title'),
             'slug'        => url_title($this->request->getPost('title'), '-', true),
             'content'     => $this->request->getPost('content'),
+            'video_url'   => $this->request->getPost('video_url'),
             'status'      => $this->request->getPost('status') ?: 'published'
         ];
 

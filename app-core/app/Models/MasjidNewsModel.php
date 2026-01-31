@@ -13,7 +13,7 @@ class MasjidNewsModel extends Model
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = [
-        'masjid_id', 'category_id', 'title', 'slug', 'content', 'thumbnail', 'status', 'views'
+        'masjid_id', 'category_id', 'title', 'slug', 'content', 'thumbnail', 'video_url', 'status', 'views'
     ];
 
     // Dates

@@ -53,17 +53,17 @@
 
                         <div>
                             <label class="block text-sm font-bold mb-2">Foto Sampul (Thumbnail)</label>
-                            <div class="relative aspect-video bg-[#f0f5f3] dark:bg-white/5 rounded-2xl border-2 border-dashed border-[#dbe6e3] dark:border-white/10 flex flex-col items-center justify-center text-[#608a7e] overflow-hidden group">
+                            <div class="relative aspect-video bg-[#f0f5f3] dark:bg-white/5 rounded-2xl border-2 border-dashed border-[#dbe6e3] dark:border-white/10 flex flex-col items-center justify-center text-[#608a7e] overflow-hidden group hover:border-primary transition-colors">
                                 <?php if (!empty($news['thumbnail'])): ?>
                                     <img id="thumbPrev" src="<?= $storage->url($news['thumbnail']) ?>" class="absolute inset-0 size-full object-cover">
                                 <?php else: ?>
                                     <img id="thumbPrev" src="" class="absolute inset-0 size-full object-cover hidden">
                                 <?php endif; ?>
-                                <div class="relative z-10 flex flex-col items-center group-hover:scale-110 transition-transform">
+                                <div id="thumbPlaceholder" class="relative z-10 flex flex-col items-center group-hover:scale-110 transition-transform <?= !empty($news['thumbnail']) ? 'opacity-0' : '' ?>">
                                     <span class="material-symbols-outlined text-3xl mb-1">add_a_photo</span>
                                     <span class="text-[10px] font-bold uppercase tracking-wider">Unggah Foto</span>
                                 </div>
-                                <input type="file" name="thumbnail" class="absolute inset-0 opacity-0 cursor-pointer" onchange="previewThumb(this)">
+                                <input type="file" name="thumbnail" id="thumbnailInput" class="absolute inset-0 opacity-0 cursor-pointer z-20" onchange="previewThumb(this)">
                             </div>
                             <p class="text-[10px] text-[#608a7e] mt-2">Format: JPG, PNG, WEBP (Maks 2MB). Rekomendasi 1200x675px.</p>
                         </div>
@@ -110,7 +110,7 @@
                 ['bold', 'italic', 'underline', 'strike'],
                 ['blockquote', 'code-block'],
                 [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                ['link', 'image'],
+                ['link', 'image', 'video'],
                 ['clean']
             ]
         }
@@ -126,8 +126,10 @@
             var reader = new FileReader();
             reader.onload = function(e) {
                 const img = document.getElementById('thumbPrev');
+                const ph = document.getElementById('thumbPlaceholder');
                 img.src = e.target.result;
                 img.classList.remove('hidden');
+                ph.classList.add('opacity-0');
             }
             reader.readAsDataURL(input.files[0]);
         }
