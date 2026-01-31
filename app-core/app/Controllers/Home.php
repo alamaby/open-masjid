@@ -86,10 +86,7 @@ class Home extends BaseController
 
         // Fetch Service Areas
         $wilayahModel = new \App\Models\MasjidWilayahModel();
-        $wilayah = $wilayahModel->select('masjid_wilayah.*, regions.name as region_name')
-            ->join('regions', 'regions.id = masjid_wilayah.region_id')
-            ->where('masjid_id', $masjid['id'])
-            ->findAll();
+        $wilayah = $wilayahModel->where('masjid_id', $masjid['id'])->findAll();
 
         $newsModel = new \App\Models\MasjidNewsModel();
         $news = $newsModel->select('masjid_news.*, masjid_news_categories.name as category_name')
