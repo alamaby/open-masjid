@@ -58,4 +58,16 @@ class Home extends BaseController
     {
         return view('register');
     }
+
+    public function masjid($username): string
+    {
+        $masjidModel = new \App\Models\MasjidModel();
+        $masjid = $masjidModel->where('username', $username)->first();
+
+        if (!$masjid) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound("Masjid dengan username @$username tidak ditemukan.");
+        }
+
+        return "Halaman Publik Masjid: " . esc($masjid['name']);
+    }
 }

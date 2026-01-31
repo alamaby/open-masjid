@@ -93,8 +93,34 @@ class Admin extends BaseController
         $masjidId = session()->get('masjid_id');
 
         $data = $this->request->getPost();
+    $oldMasjid = $masjidModel->find($masjidId);
+
+    // Handle Username Change
+    if (isset($data['username']) && $data['username'] !== $oldMasjid['username']) {
+        // 1. Check uniqueness
+        $exists = $masjidModel->where('username', $data['username'])->where('id !=', $masjidId)->first();
+        if ($exists) {
+            return redirect()->back()->withInput()->with('error', 'Username sudah digunakan oleh masjid lain.');
+        }
+
+        // 2. Check time constraint (1 month)
+        if (!empty($oldMasjid['username_updated_at'])) {
+            $lastUpdate = new \DateTime($oldMasjid['username_updated_at']);
+            $now = new \DateTime();
+            $diff = $now->diff($lastUpdate);
+            
+            if ($diff->m < 1 && $diff->y == 0) {
+                return redirect()->back()->withInput()->with('error', 'Username hanya dapat diubah minimal 1 bulan sekali.');
+            }
+        }
         
-        // Handle Photo Upload
+        $data['username_updated_at'] = date('Y-m-d H:i:s');
+    } else {
+        // Prevent accidental update of username_updated_at if username is same
+        unset($data['username']);
+    }
+    
+    // Handle Photo Upload
         $file = $this->request->getFile('foto_utama');
         if ($file && $file->isValid() && !$file->hasMoved()) {
             $storage = new Storage();

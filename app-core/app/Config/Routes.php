@@ -6,6 +6,7 @@ use CodeIgniter\Router\RouteCollection;
  * @var RouteCollection $routes
  */
 $routes->get('/', 'Home::index');
+$routes->get('u/(:any)', 'Home::masjid/$1');
 $routes->get('fitur', 'Home::fitur');
 $routes->get('kebaikan', 'Home::kebaikan');
 $routes->get('tentang', 'Home::tentang');

@@ -77,6 +77,20 @@
                     <label class="block text-sm font-semibold text-[#111816] dark:text-white mb-1.5">Nomor SK/Legalitas</label>
                     <input name="no_sk" class="w-full rounded-lg border-[#dbe6e3] dark:bg-white/5 dark:border-white/10 focus:border-primary focus:ring-primary" type="text" value="<?= esc($masjid['no_sk'] ?? '') ?>"/>
                 </div>
+                <div>
+                    <label class="block text-sm font-semibold text-[#111816] dark:text-white mb-1.5 flex items-center gap-2">
+                        Username Masjid
+                        <span class="text-[10px] px-1.5 py-0.5 bg-blue-100 text-blue-700 rounded font-bold uppercase">Web URL</span>
+                    </label>
+                    <div class="flex items-center gap-2">
+                        <span class="text-sm text-[#608a7e] font-medium"><?= base_url('u/') ?></span>
+                        <input name="username" class="flex-1 rounded-lg border-[#dbe6e3] dark:bg-white/5 dark:border-white/10 focus:border-primary focus:ring-primary" type="text" value="<?= esc($masjid['username'] ?? '') ?>" placeholder="username-masjid-anda"/>
+                    </div>
+                    <p class="text-[10px] text-[#608a7e] mt-2 italic flex items-center gap-1">
+                        <span class="material-symbols-outlined text-[12px]">info</span>
+                        Username hanya dapat diubah minimal 1 bulan sekali untuk konsistensi link.
+                    </p>
+                </div>
             </div>
             <div class="space-y-4">
                 <label class="block text-sm font-semibold text-[#111816] dark:text-white">Foto Utama Masjid</label>
@@ -499,7 +513,7 @@
                 </div>
                 <span class="text-sm font-bold text-primary"><?= $percentage ?>% Lengkap</span>
             </div>
-            <a class="text-sm font-bold text-primary hover:underline flex items-center gap-1.5" href="<?= base_url('/') ?>">
+            <a class="text-sm font-bold text-primary hover:underline flex items-center gap-1.5" href="<?= base_url('u/' . esc($masjid['username'])) ?>" target="_blank">
                 <span class="material-symbols-outlined text-lg">visibility</span>
                 Lihat Halaman Publik
             </a>
