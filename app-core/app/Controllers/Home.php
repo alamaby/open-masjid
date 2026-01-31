@@ -61,6 +61,7 @@ class Home extends BaseController
 
     public function masjid($username): string
     {
+        $masjidId = null;
         $masjidModel = new \App\Models\MasjidModel();
         $masjid = $masjidModel->where('username', $username)->first();
 
@@ -68,6 +69,34 @@ class Home extends BaseController
             throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound("Masjid dengan username @$username tidak ditemukan.");
         }
 
-        return "Halaman Publik Masjid: " . esc($masjid['name']);
+        $masjidId = $masjid['id'];
+        $db = \Config\Database::connect();
+        
+        // Fetch Pengurus
+        $pengurus = $db->table('masjid_pengurus')
+            ->select('masjid_pengurus.*, users.name as user_name, users.phone as user_phone, users.email as user_email')
+            ->join('users', 'users.id = masjid_pengurus.user_id')
+            ->where('masjid_id', $masjidId)
+            ->get()
+            ->getResultArray();
+
+        // Fetch Gallery
+        $galleryModel = new \App\Models\MasjidGalleryModel();
+        $gallery = $galleryModel->where('masjid_id', $masjidId)->findAll();
+
+        // Fetch Service Areas
+        $wilayahModel = new \App\Models\MasjidWilayahModel();
+        $wilayah = $wilayahModel->where('masjid_id', $masjidId)->findAll();
+
+        $storage = new \App\Libraries\Storage();
+
+        return view('public/masjid_profile', [
+            'title'    => esc($masjid['name']) . ' - Masj.id',
+            'masjid'   => $masjid,
+            'pengurus' => $pengurus,
+            'gallery'  => $gallery,
+            'wilayah'  => $wilayah,
+            'storage'  => $storage
+        ]);
     }
 }
