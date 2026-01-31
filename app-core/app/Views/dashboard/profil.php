@@ -278,7 +278,7 @@
                     </span>
                     <?php endforeach; ?>
                     
-                    <button type="button" onclick="addServiceArea()" class="px-4 py-1.5 border border-dashed border-[#dbe6e3] rounded-full text-sm font-medium text-[#608a7e] hover:bg-[#f0f5f3] flex items-center gap-1 transition-colors">
+                    <button type="button" onclick="addServiceArea(this)" class="px-4 py-1.5 border border-dashed border-[#dbe6e3] rounded-full text-sm font-medium text-[#608a7e] hover:bg-[#f0f5f3] flex items-center gap-1 transition-colors">
                         <span class="material-symbols-outlined text-sm">add</span> Tambah Wilayah
                     </button>
                 </div>
@@ -297,17 +297,16 @@
                 </div>
             </div>
             <script>
-                function addServiceArea() {
+                function addServiceArea(btn) {
                     const name = prompt("Masukkan nama wilayah (contoh: RW 01 Selong):");
                     if (name && name.trim() !== "") {
                         const container = document.getElementById('serviceAreaContainer');
-                        const button = event.currentTarget;
                         
                         const span = document.createElement('span');
                         span.className = "service-area-badge px-4 py-1.5 bg-primary/10 text-primary border border-primary/20 rounded-full text-sm font-medium flex items-center gap-2";
                         span.innerHTML = `${name.trim()} <input type="hidden" name="wilayah[]" value="${name.trim()}"> <span class="material-symbols-outlined text-sm cursor-pointer hover:text-red-500" onclick="this.parentElement.remove()">close</span>`;
                         
-                        container.insertBefore(span, button);
+                        container.insertBefore(span, btn);
                     }
                 }
             </script>

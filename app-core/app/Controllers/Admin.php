@@ -108,7 +108,7 @@ class Admin extends BaseController
         $data['is_external_service'] = isset($data['is_external_service']) ? 1 : 0;
 
         // Handle Wilayah Layanan (Service Areas)
-        $wilayahData = $data['wilayah'] ?? [];
+        $wilayahData = $this->request->getPost('wilayah') ?? [];
         unset($data['wilayah']);
 
         if ($masjidModel->update($masjidId, $data)) {
