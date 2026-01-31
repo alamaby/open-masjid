@@ -203,6 +203,9 @@ class Admin extends BaseController
     public function berita(): string
     {
         $masjidId = session()->get('masjid_id');
+        $masjidModel = new \App\Models\MasjidModel();
+        $masjid = $masjidModel->find($masjidId);
+
         $newsModel = new \App\Models\MasjidNewsModel();
         $categoryModel = new \App\Models\MasjidNewsCategoryModel();
 
@@ -218,6 +221,7 @@ class Admin extends BaseController
             'title' => 'Berita & Dokumentasi - Masj.id',
             'news' => $news,
             'categories' => $categories,
+            'masjid' => $masjid,
             'storage' => new Storage()
         ]);
     }

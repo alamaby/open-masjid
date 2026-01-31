@@ -67,9 +67,10 @@ class Auth extends BaseController
                 'user_id'    => $userId,
                 'user_name'  => $userData['name'],
                 'user_email' => $userData['email'],
-                'role'       => 'pengurus',
-                'masjid_id'  => $masjidId,
-                'masjid_name'=> $masjidData['name']
+                'role'            => 'pengurus',
+                'masjid_id'       => $masjidId,
+                'masjid_name'     => $masjidData['name'],
+                'masjid_username' => $masjidData['username']
             ]);
 
             return redirect()->to('/dashboard')->with('success', 'Pendaftaran masjid berhasil. Selamat datang!');
@@ -110,6 +111,7 @@ class Auth extends BaseController
                 $sessionData['role'] = 'pengurus';
                 $sessionData['masjid_id'] = $pengurus['masjid_id'];
                 $sessionData['masjid_name'] = $masjid['name'] ?? 'Masjid Saya';
+                $sessionData['masjid_username'] = $masjid['username'] ?? '';
             } else {
                 $sessionData['role'] = 'jamaah';
             }

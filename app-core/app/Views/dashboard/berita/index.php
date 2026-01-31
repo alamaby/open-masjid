@@ -109,7 +109,7 @@
                                             <span class="material-symbols-outlined text-lg">delete</span>
                                         </button>
                                     </div>
-                                    <a href="<?= base_url(session()->get('masjid_username') . '/berita/' . $item['slug']) ?>" target="_blank" class="text-xs font-bold text-primary hover:underline">Pratinjau <span class="material-symbols-outlined text-[10px] align-middle">open_in_new</span></a>
+                                    <a href="<?= base_url(esc($masjid['username']) . '/berita/' . $item['slug']) ?>" target="_blank" class="text-xs font-bold text-primary hover:underline">Pratinjau <span class="material-symbols-outlined text-[10px] align-middle">open_in_new</span></a>
                                 </div>
                             </div>
                         </div>
