@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\MasjidModel;
 use App\Models\MasjidWilayahModel;
+use App\Models\MasjidGalleryModel;
 use App\Models\MasjidPengurusModel;
 use App\Models\UserModel;
 use App\Models\ProvinceModel;
@@ -58,6 +59,21 @@ class Admin extends BaseController
         $wilayahModel = new MasjidWilayahModel();
         $wilayah = $wilayahModel->where('masjid_id', $masjidId)->findAll();
 
+        // Fetch Gallery
+        $galleryModel = new MasjidGalleryModel();
+        $gallery = $galleryModel->where('masjid_id', $masjidId)->findAll();
+        
+        // Get unique categories from gallery
+        $categories = $galleryModel->where('masjid_id', $masjidId)
+            ->select('category')
+            ->distinct()
+            ->get()
+            ->getResultArray();
+        $categories = array_column($categories, 'category');
+        if (empty($categories)) {
+            $categories = ['Umum', 'Fasilitas', 'Kegiatan']; // Default categories
+        }
+
         return view('dashboard/profil', [
             'title'      => 'Profil Masjid - Masj.id',
             'masjid'     => $masjid,
@@ -65,7 +81,9 @@ class Admin extends BaseController
             'storage'    => $storage,
             'percentage' => round($percentage),
             'provinces'  => $provinces,
-            'wilayah'    => $wilayah
+            'wilayah'    => $wilayah,
+            'gallery'    => $gallery,
+            'categories' => $categories
         ]);
     }
 
@@ -278,5 +296,58 @@ class Admin extends BaseController
         }
 
         return $this->response->setJSON(['status' => 'error', 'message' => 'Gagal menghapus pengurus.']);
+    }
+
+    public function uploadGallery()
+    {
+        $masjidId = session()->get('masjid_id');
+        $category = $this->request->getPost('category');
+        $files = $this->request->getFiles();
+
+        if (empty($category) || empty($files['photos'])) {
+            return $this->response->setJSON(['status' => 'error', 'message' => 'Data tidak lengkap.']);
+        }
+
+        $galleryModel = new MasjidGalleryModel();
+        $storage = new Storage();
+        $successCount = 0;
+
+        foreach ($files['photos'] as $file) {
+            if ($file->isValid() && !$file->hasMoved()) {
+                $path = $storage->upload($file, 'images/gallery');
+                if ($path) {
+                    $galleryModel->insert([
+                        'masjid_id'  => $masjidId,
+                        'image_path' => $path,
+                        'category'   => $category
+                    ]);
+                    $successCount++;
+                }
+            }
+        }
+
+        if ($successCount > 0) {
+            return $this->response->setJSON(['status' => 'success', 'message' => "$successCount foto berhasil diunggah."]);
+        }
+
+        return $this->response->setJSON(['status' => 'error', 'message' => 'Gagal mengunggah foto.']);
+    }
+
+    public function deleteGallery()
+    {
+        $id = $this->request->getPost('id');
+        $masjidId = session()->get('masjid_id');
+
+        $galleryModel = new MasjidGalleryModel();
+        $photo = $galleryModel->where(['id' => $id, 'masjid_id' => $masjidId])->first();
+
+        if ($photo) {
+            $storage = new Storage();
+            $storage->delete($photo['image_path']);
+            $galleryModel->delete($id);
+            return $this->response->setJSON(['status' => 'success', 'message' => 'Foto berhasil dihapus.']);
+        }
+
+        return $this->response->setJSON(['status' => 'error', 'message' => 'Foto tidak ditemukan.']);
     }
 }

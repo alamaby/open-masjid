@@ -448,29 +448,41 @@
                 <h2 class="text-xl font-bold text-[#111816] dark:text-white">Galeri Foto & Fasilitas</h2>
             </div>
             <div class="p-8">
-                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
-                    <div class="aspect-square bg-center bg-cover rounded-lg border border-[#e5e7eb] dark:border-white/10 relative group" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAp0qv3finh4CU-nKuk34pn-F4T751xNGsz0FrDr755NHqu0We8JUI8dhUAPIpqyx3NKQ_dvWpNOMDVNHPzkEse09iknxQXohnFd01vCkSWTywISbGkKEqmXtJBlz0fbycZjHvFDn7ipnN3ZbkG7oY3plwjJ5Brb3UvumFr6mZI1n-JN0fmV602TXRvleZNA1I7JDVOxzu97hF8GYa3PFP4qXNO2CWBpr9490ApxZKhWz-2Rfi8fWoZiNGAv2AK9odDeTbFljjLNNSP");'>
-                        <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-lg">
-                            <span class="material-symbols-outlined text-white">delete</span>
-                        </div>
+                <!-- Category Filters & Management -->
+                <div class="space-y-4 mb-8">
+                    <div class="flex items-center justify-between">
+                        <label class="text-sm font-bold text-[#111816] dark:text-white">Kategori Galeri</label>
+                        <button type="button" onclick="promptAddCategory()" class="text-primary text-xs font-bold hover:underline flex items-center gap-1">
+                            <span class="material-symbols-outlined text-sm">add_circle</span> Tambah Kategori
+                        </button>
                     </div>
-                    <button class="aspect-square border-2 border-dashed border-[#dbe6e3] dark:border-white/10 rounded-lg flex flex-col items-center justify-center text-[#608a7e] hover:bg-[#f0f5f3] dark:hover:bg-white/5 transition-colors">
-                        <span class="material-symbols-outlined text-2xl mb-1">add_photo_alternate</span>
-                        <span class="text-[10px] font-bold">TAMBAH</span>
-                    </button>
+                    <div class="flex flex-wrap gap-2" id="galleryCategoryContainer">
+                        <button type="button" onclick="filterGallery('all')" class="gallery-filter-btn active px-4 py-1.5 rounded-full text-xs font-bold border border-primary bg-primary text-white transition-all" data-category="all">Semua</button>
+                        <?php foreach ($categories as $cat): ?>
+                            <button type="button" onclick="filterGallery('<?= esc($cat) ?>')" class="gallery-filter-btn px-4 py-1.5 rounded-full text-xs font-bold border border-[#dbe6e3] text-[#608a7e] hover:border-primary hover:text-primary transition-all" data-category="<?= esc($cat) ?>"><?= esc($cat) ?></button>
+                        <?php endforeach; ?>
+                    </div>
                 </div>
-                <div class="space-y-4">
-                    <label class="block text-sm font-semibold text-[#111816] dark:text-white">Area Fokus & Fasilitas Utama</label>
-                    <div class="flex flex-wrap gap-3">
-                        <label class="flex items-center gap-2 px-4 py-2 bg-[#f0f5f3] dark:bg-white/5 rounded-lg cursor-pointer hover:bg-primary/5 transition-colors">
-                            <input checked="" class="rounded text-primary focus:ring-primary border-[#dbe6e3]" type="checkbox"/>
-                            <span class="text-sm font-medium">Pendidikan</span>
-                        </label>
-                        <label class="flex items-center gap-2 px-4 py-2 bg-[#f0f5f3] dark:bg-white/5 rounded-lg cursor-pointer hover:bg-primary/5 transition-colors">
-                            <input checked="" class="rounded text-primary focus:ring-primary border-[#dbe6e3]" type="checkbox"/>
-                            <span class="text-sm font-medium">Sosial/Santunan</span>
-                        </label>
-                    </div>
+
+                <!-- Photos Grid -->
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4" id="galleryPhotoGrid">
+                    <?php foreach ($gallery as $img): ?>
+                        <div class="aspect-square bg-center bg-cover rounded-xl border border-[#e5e7eb] dark:border-white/10 relative group photo-item" data-category="<?= esc($img['category']) ?>" style='background-image: url("<?= $storage->url($img['image_path']) ?>");'>
+                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-xl">
+                                <button type="button" onclick="confirmDeletePhoto(<?= $img['id'] ?>)" class="text-white hover:text-red-400">
+                                    <span class="material-symbols-outlined">delete</span>
+                                </button>
+                            </div>
+                            <div class="absolute bottom-1 left-1 px-1.5 py-0.5 bg-black/60 text-[8px] text-white rounded font-bold uppercase backdrop-blur-sm">
+                                <?= esc($img['category']) ?>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                    
+                    <button type="button" onclick="openUploadGalleryModal()" class="aspect-square border-2 border-dashed border-[#dbe6e3] dark:border-white/10 rounded-xl flex flex-col items-center justify-center text-[#608a7e] hover:bg-[#f0f5f3] dark:hover:bg-white/5 transition-colors">
+                        <span class="material-symbols-outlined text-2xl mb-1">add_photo_alternate</span>
+                        <span class="text-[10px] font-bold">UNGGAH FOTO</span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -503,7 +515,52 @@
     </div>
 </footer>
 </form>
-<!-- Modal Tambah Pengurus -->
+</div>
+
+<!-- Modal Unggah Galeri -->
+<div id="uploadGalleryModal" class="fixed inset-0 bg-black/50 z-[110] hidden items-center justify-center p-4">
+    <div class="bg-white dark:bg-[#1a2e28] rounded-2xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all">
+        <div class="p-6 border-b border-[#e5e7eb] dark:border-white/10 flex justify-between items-center bg-primary/5">
+            <h3 class="text-lg font-bold text-[#111816] dark:text-white flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary">add_photo_alternate</span>
+                Unggah Foto Galeri
+            </h3>
+            <button onclick="closeUploadGalleryModal()" class="text-[#608a7e] hover:text-red-500 transition-colors">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        <div class="p-6 space-y-5">
+            <div>
+                <label class="block text-sm font-semibold text-[#111816] dark:text-white mb-2">Pilih Kategori</label>
+                <select id="galleryUploadCategory" class="w-full rounded-xl border-[#dbe6e3] dark:bg-white/5 dark:border-white/10 focus:border-primary focus:ring-primary">
+                    <?php foreach ($categories as $cat): ?>
+                        <option value="<?= esc($cat) ?>"><?= esc($cat) ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <div>
+                <label class="block text-sm font-semibold text-[#111816] dark:text-white mb-2">Pilih Foto</label>
+                <div class="relative group">
+                    <input type="file" id="galleryFileInput" multiple accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
+                    <div class="border-2 border-dashed border-[#dbe6e3] dark:border-white/10 rounded-xl p-8 flex flex-col items-center justify-center text-[#608a7e] group-hover:bg-[#f0f5f3] dark:group-hover:bg-white/5 transition-colors">
+                        <span class="material-symbols-outlined text-4xl mb-2">cloud_upload</span>
+                        <span class="text-sm font-bold" id="galleryFileStatus">Klik atau seret foto ke sini</span>
+                        <span class="text-[10px] mt-1">Bisa pilih lebih dari satu foto</span>
+                    </div>
+                </div>
+                <div id="galleryPreview" class="grid grid-cols-4 gap-2 mt-4"></div>
+            </div>
+        </div>
+        <div class="p-6 bg-slate-50 dark:bg-white/5 flex gap-3">
+            <button onclick="closeUploadGalleryModal()" class="flex-1 px-4 py-2.5 text-[#608a7e] font-bold text-sm hover:bg-[#f0f5f3] dark:hover:bg-white/5 rounded-xl transition-all border border-[#dbe6e3] dark:border-white/10">Batal</button>
+            <button onclick="submitUploadGallery()" id="submitGalleryBtn" class="flex-1 px-4 py-2.5 bg-primary hover:bg-primary/90 text-white font-bold text-sm rounded-xl shadow-lg shadow-primary/20 transition-all flex items-center justify-center gap-2">
+                Unggah
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
 <div id="addPengurusModal" class="fixed inset-0 bg-black/50 z-[100] hidden items-center justify-center p-4">
     <div class="bg-white dark:bg-[#1a2e28] rounded-2xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all">
         <div class="p-6 border-b border-[#e5e7eb] dark:border-white/10 flex justify-between items-center bg-primary/5">
@@ -752,6 +809,158 @@
             } catch (error) {
                 console.error('Error deleting pengurus:', error);
                 alert('Gagal menghapus pengurus.');
+            }
+        }
+    }
+
+    // Gallery Functions
+    function filterGallery(category) {
+        const photos = document.querySelectorAll('.photo-item');
+        const buttons = document.querySelectorAll('.gallery-filter-btn');
+        
+        buttons.forEach(btn => {
+            if (btn.dataset.category === category) {
+                btn.classList.add('active', 'bg-primary', 'text-white');
+                btn.classList.remove('border-[#dbe6e3]', 'text-[#608a7e]');
+            } else {
+                btn.classList.remove('active', 'bg-primary', 'text-white');
+                btn.classList.add('border-[#dbe6e3]', 'text-[#608a7e]');
+            }
+        });
+
+        photos.forEach(photo => {
+            if (category === 'all' || photo.dataset.category === category) {
+                photo.style.display = 'block';
+            } else {
+                photo.style.display = 'none';
+            }
+        });
+    }
+
+    function promptAddCategory() {
+        const name = prompt("Masukkan nama kategori baru:");
+        if (name && name.trim() !== "") {
+            const container = document.getElementById('galleryCategoryContainer');
+            const select = document.getElementById('galleryUploadCategory');
+            
+            // Add to filters
+            const button = document.createElement('button');
+            button.type = "button";
+            button.onclick = () => filterGallery(name);
+            button.className = "gallery-filter-btn px-4 py-1.5 rounded-full text-xs font-bold border border-[#dbe6e3] text-[#608a7e] hover:border-primary hover:text-primary transition-all";
+            button.dataset.category = name;
+            button.innerText = name;
+            container.appendChild(button);
+
+            // Add to select in modal
+            const option = document.createElement('option');
+            option.value = name;
+            option.innerText = name;
+            select.appendChild(option);
+            
+            alert(`Kategori "${name}" ditambahkan. Simpan foto untuk mempermanenkan kategori.`);
+        }
+    }
+
+    function openUploadGalleryModal() {
+        document.getElementById('uploadGalleryModal').classList.remove('hidden');
+        document.getElementById('uploadGalleryModal').classList.add('flex');
+    }
+
+    function closeUploadGalleryModal() {
+        document.getElementById('uploadGalleryModal').classList.add('hidden');
+        document.getElementById('uploadGalleryModal').classList.remove('flex');
+        document.getElementById('galleryFileInput').value = '';
+        document.getElementById('galleryPreview').innerHTML = '';
+        document.getElementById('galleryFileStatus').innerText = 'Klik atau seret foto ke sini';
+    }
+
+    document.getElementById('galleryFileInput').addEventListener('change', function(e) {
+        const files = e.target.files;
+        const preview = document.getElementById('galleryPreview');
+        const status = document.getElementById('galleryFileStatus');
+        
+        preview.innerHTML = '';
+        if (files.length > 0) {
+            status.innerText = `${files.length} foto dipilih`;
+            Array.from(files).forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const div = document.createElement('div');
+                    div.className = 'aspect-square rounded-lg bg-cover bg-center border border-[#dbe6e3]';
+                    div.style.backgroundImage = `url(${e.target.result})`;
+                    preview.appendChild(div);
+                }
+                reader.readAsDataURL(file);
+            });
+        } else {
+            status.innerText = 'Klik atau seret foto ke sini';
+        }
+    });
+
+    async function submitUploadGallery() {
+        const category = document.getElementById('galleryUploadCategory').value;
+        const fileInput = document.getElementById('galleryFileInput');
+        const submitBtn = document.getElementById('submitGalleryBtn');
+
+        if (!category || fileInput.files.length === 0) {
+            alert('Pilih kategori dan pilih minimal satu foto.');
+            return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.innerText = 'Mengunggah...';
+
+        try {
+            const formData = new FormData();
+            formData.append('category', category);
+            Array.from(fileInput.files).forEach(file => {
+                formData.append('photos[]', file);
+            });
+            formData.append('<?= csrf_token() ?>', '<?= csrf_hash() ?>');
+
+            const response = await fetch('<?= base_url('dashboard/gallery/upload') ?>', {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+            if (result.status === 'success') {
+                location.reload();
+            } else {
+                alert(result.message);
+                submitBtn.disabled = false;
+                submitBtn.innerText = 'Unggah';
+            }
+        } catch (error) {
+            console.error('Error uploading gallery:', error);
+            alert('Gagal mengunggah foto.');
+            submitBtn.disabled = false;
+            submitBtn.innerText = 'Unggah';
+        }
+    }
+
+    async function confirmDeletePhoto(id) {
+        if (confirm('Apakah Anda yakin ingin menghapus foto ini dari galeri?')) {
+            try {
+                const formData = new FormData();
+                formData.append('id', id);
+                formData.append('<?= csrf_token() ?>', '<?= csrf_hash() ?>');
+
+                const response = await fetch('<?= base_url('dashboard/gallery/delete') ?>', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+                if (result.status === 'success') {
+                    location.reload();
+                } else {
+                    alert(result.message);
+                }
+            } catch (error) {
+                console.error('Error deleting photo:', error);
+                alert('Gagal menghapus foto.');
             }
         }
     }

@@ -28,6 +28,8 @@ $routes->get('dashboard/users/search', 'Admin::searchUsers');
 $routes->post('dashboard/pengurus/add', 'Admin::addPengurus');
 $routes->post('dashboard/pengurus/update', 'Admin::updatePengurus');
 $routes->post('dashboard/pengurus/delete', 'Admin::deletePengurus');
+$routes->post('dashboard/gallery/upload', 'Admin::uploadGallery');
+$routes->post('dashboard/gallery/delete', 'Admin::deleteGallery');
 $routes->get('dashboard/program', 'Admin::program');
 $routes->get('dashboard/berita', 'Admin::berita');
 $routes->get('dashboard/keuangan', 'Admin::keuangan');
