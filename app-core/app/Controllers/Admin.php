@@ -262,11 +262,22 @@ class Admin extends BaseController
         $newsModel = new \App\Models\MasjidNewsModel();
         $newsId = $this->request->getPost('id');
 
+        $slugPrefix = url_title($this->request->getPost('title'), '-', true);
+        if (!$newsId) {
+            $slug = $slugPrefix . '-' . substr(md5(uniqid()), 0, 6);
+        } else {
+            // Keep existing slug for SEO if updating, 
+            // unless we want to regenerate it. Let's keep it unless title changed significantly.
+            // For simplicity in this task, let's just use the current one if it exists or create one if not.
+            $oldNews = $newsModel->find($newsId);
+            $slug = $oldNews['slug'] ?? ($slugPrefix . '-' . substr(md5(uniqid()), 0, 6));
+        }
+
         $data = [
             'masjid_id'   => $masjidId,
             'category_id' => $this->request->getPost('category_id') ?: null,
             'title'       => $this->request->getPost('title'),
-            'slug'        => url_title($this->request->getPost('title'), '-', true),
+            'slug'        => $slug,
             'content'     => $this->request->getPost('content'),
             'video_url'   => $this->request->getPost('video_url'),
             'status'      => $this->request->getPost('status') ?: 'published'

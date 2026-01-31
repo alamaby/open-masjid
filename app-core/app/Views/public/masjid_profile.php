@@ -164,16 +164,58 @@
 </section>
 <?php endif; ?>
 
-<!-- Berita & Kegiatan Section (Placeholder) -->
+<!-- Berita & Kegiatan Section -->
 <?php if ($masjid['menu_berita'] ?? 1): ?>
 <section id="berita" class="py-24 px-6 bg-background-light dark:bg-background-dark/50 overflow-hidden">
-    <div class="max-w-[1200px] mx-auto text-center">
-        <h2 class="text-sm font-bold text-primary uppercase tracking-[0.2em] mb-3">Warta Masjid</h2>
-        <h3 class="text-3xl md:text-5xl font-black mb-8">Berita & Kegiatan</h3>
-        <div class="p-12 bg-white dark:bg-[#1a2e25] rounded-[2.5rem] border border-dashed border-[#dbe6e1] dark:border-[#1e3a2f]">
-            <span class="material-symbols-outlined text-6xl text-primary/20 mb-4 font-light">edit_calendar</span>
-            <p class="text-[#608a7e] font-medium">Belum ada berita atau kegiatan terbaru yang dipublikasikan.</p>
+    <div class="max-w-[1200px] mx-auto">
+        <div class="text-center mb-16">
+            <h2 class="text-sm font-bold text-primary uppercase tracking-[0.2em] mb-3">Warta Masjid</h2>
+            <h3 class="text-3xl md:text-5xl font-black italic">Berita & Kegiatan</h3>
         </div>
+
+        <?php if (empty($news)): ?>
+            <div class="p-12 bg-white dark:bg-[#1a2e25] rounded-[2.5rem] border border-dashed border-[#dbe6e1] dark:border-[#1e3a2f] text-center">
+                <span class="material-symbols-outlined text-6xl text-primary/20 mb-4 font-light">edit_calendar</span>
+                <p class="text-[#608a7e] font-medium">Belum ada berita atau kegiatan terbaru yang dipublikasikan.</p>
+            </div>
+        <?php else: ?>
+            <div class="grid md:grid-cols-3 gap-8">
+                <?php foreach ($news as $item): ?>
+                    <a href="<?= base_url($masjid['username'] . '/berita/' . $item['slug']) ?>" class="group bg-white dark:bg-white/5 rounded-[2.5rem] overflow-hidden border border-[#e5e7eb] dark:border-white/10 hover:shadow-2xl transition-all duration-500 flex flex-col">
+                        <div class="aspect-[16/10] overflow-hidden relative">
+                            <?php if (!empty($item['thumbnail'])): ?>
+                                <img src="<?= $storage->url($item['thumbnail']) ?>" class="size-full object-cover transition-transform duration-700 group-hover:scale-110">
+                            <?php else: ?>
+                                <div class="size-full bg-slate-100 flex items-center justify-center text-slate-300">
+                                    <span class="material-symbols-outlined text-5xl">image</span>
+                                </div>
+                            <?php endif; ?>
+                            <div class="absolute top-6 left-6">
+                                <span class="px-3 py-1 bg-primary text-white text-[10px] font-bold uppercase tracking-widest rounded-lg">
+                                    <?= esc($item['category_name'] ?: 'Umum') ?>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="p-8 flex-1 flex flex-col">
+                            <h4 class="text-xl font-black mb-4 group-hover:text-primary transition-colors line-clamp-2 leading-tight"><?= esc($item['title']) ?></h4>
+                            <div class="mt-auto pt-6 border-t border-gray-100 dark:border-white/5 flex items-center justify-between">
+                                <div class="flex items-center gap-2 text-xs font-bold text-[#608a7e]">
+                                    <span class="material-symbols-outlined text-sm">calendar_today</span>
+                                    <?= date('d M Y', strtotime($item['created_at'])) ?>
+                                </div>
+                                <span class="material-symbols-outlined text-primary group-hover:translate-x-2 transition-transform">arrow_right_alt</span>
+                            </div>
+                        </div>
+                    </a>
+                <?php endforeach; ?>
+            </div>
+            <div class="text-center mt-12">
+                <a href="#" class="inline-flex items-center gap-2 text-primary font-bold hover:underline">
+                    Lihat Semua Berita
+                    <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                </a>
+            </div>
+        <?php endif; ?>
     </div>
 </section>
 <?php endif; ?>

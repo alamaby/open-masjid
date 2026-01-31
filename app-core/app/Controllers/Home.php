@@ -86,7 +86,18 @@ class Home extends BaseController
 
         // Fetch Service Areas
         $wilayahModel = new \App\Models\MasjidWilayahModel();
-        $wilayah = $wilayahModel->where('masjid_id', $masjidId)->findAll();
+        $wilayah = $wilayahModel->select('masjid_wilayah.*, regions.name as region_name')
+            ->join('regions', 'regions.id = masjid_wilayah.region_id')
+            ->where('masjid_id', $masjid['id'])
+            ->findAll();
+
+        $newsModel = new \App\Models\MasjidNewsModel();
+        $news = $newsModel->select('masjid_news.*, masjid_news_categories.name as category_name')
+            ->join('masjid_news_categories', 'masjid_news_categories.id = masjid_news.category_id', 'left')
+            ->where(['masjid_news.masjid_id' => $masjid['id'], 'masjid_news.status' => 'published'])
+            ->orderBy('masjid_news.created_at', 'DESC')
+            ->limit(3)
+            ->findAll();
 
         $storage = new \App\Libraries\Storage();
 
@@ -96,7 +107,38 @@ class Home extends BaseController
             'pengurus' => $pengurus,
             'gallery'  => $gallery,
             'wilayah'  => $wilayah,
+            'news'     => $news,
             'storage'  => $storage
+        ]);
+    }
+
+    public function newsDetail($username, $slug): string
+    {
+        $masjidModel = new \App\Models\MasjidModel();
+        $masjid = $masjidModel->where('username', $username)->first();
+
+        if (!$masjid) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound("Masjid tidak ditemukan.");
+        }
+
+        $newsModel = new \App\Models\MasjidNewsModel();
+        $news = $newsModel->select('masjid_news.*, masjid_news_categories.name as category_name')
+            ->join('masjid_news_categories', 'masjid_news_categories.id = masjid_news.category_id', 'left')
+            ->where(['masjid_news.slug' => $slug, 'masjid_news.masjid_id' => $masjid['id']])
+            ->first();
+
+        if (!$news) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound("Berita tidak ditemukan.");
+        }
+
+        // Increment views
+        $newsModel->update($news['id'], ['views' => $news['views'] + 1]);
+
+        return view('public/news_detail', [
+            'title'   => esc($news['title']) . ' - ' . esc($masjid['name']),
+            'masjid'  => $masjid,
+            'news'    => $news,
+            'storage' => new \App\Libraries\Storage()
         ]);
     }
 }
