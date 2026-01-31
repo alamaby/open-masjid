@@ -48,9 +48,7 @@
 <main class="relative z-20 w-full max-w-[440px] px-6 py-12">
 <div class="bg-white dark:bg-slate-900 shadow-xl shadow-emerald-950/5 rounded-2xl border border-zinc-100 dark:border-slate-800 p-8 md:p-10">
 <header class="flex flex-col items-center mb-10 text-center">
-<div class="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-6">
-<span class="material-symbols-outlined text-primary text-4xl">mosque</span>
-</div>
+<img src="<?= base_url('public/logo_masjid_200.png') ?>" alt="Logo Masjid" class="size-16 mx-auto mb-6">
 <h2 class="text-slate-900 dark:text-white tracking-tight text-2xl font-bold leading-tight">
                     Dashboard Masjid
                 </h2>

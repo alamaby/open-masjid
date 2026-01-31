@@ -48,12 +48,7 @@
 </div>
 <main class="relative z-10 w-full max-w-2xl">
 <div class="text-center mb-10">
-<div class="inline-flex items-center gap-3 mb-6">
-<div class="w-12 h-12 bg-primary rounded-2xl flex items-center justify-center text-white shadow-lg shadow-primary/20">
-<span class="material-symbols-outlined text-2xl fill-1">mosque</span>
-</div>
-<span class="text-3xl font-display font-bold tracking-tight text-slate-800">Masj.id</span>
-</div>
+<img src="<?= base_url('public/logo_masjid_200.png') ?>" alt="Logo Masj.id" class="size-16 mx-auto mb-6 px-1">
 <h1 class="text-3xl md:text-4xl font-display font-bold text-slate-900 tracking-tight" id="page-title">Pendaftaran Akun Baru</h1>
 <p class="text-slate-500 mt-3 text-lg" id="page-subtitle">Pilih kategori pendaftaran untuk memulai</p>
 </div>
