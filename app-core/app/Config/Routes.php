@@ -32,6 +32,12 @@ $routes->post('dashboard/gallery/upload', 'Admin::uploadGallery');
 $routes->post('dashboard/gallery/delete', 'Admin::deleteGallery');
 $routes->get('dashboard/program', 'Admin::program');
 $routes->get('dashboard/berita', 'Admin::berita');
+$routes->get('dashboard/berita/create', 'Admin::createBerita');
+$routes->get('dashboard/berita/edit/(:num)', 'Admin::editBerita/$1');
+$routes->post('dashboard/berita/save', 'Admin::saveBerita');
+$routes->post('dashboard/berita/delete', 'Admin::deleteBerita');
+$routes->post('dashboard/berita/category/save', 'Admin::saveNewsCategory');
+$routes->post('dashboard/berita/category/delete', 'Admin::deleteNewsCategory');
 $routes->get('dashboard/keuangan', 'Admin::keuangan');
 
 // Public Profile (Catch-all)

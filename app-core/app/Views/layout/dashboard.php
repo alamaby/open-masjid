@@ -58,5 +58,5 @@
             <?= $this->renderSection('content') ?>
         </div>
     </main>
-</body>
+    <?= $this->renderSection('scripts') ?>
 </body></html>

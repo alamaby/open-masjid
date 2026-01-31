@@ -9,6 +9,8 @@ use App\Models\MasjidPengurusModel;
 use App\Models\UserModel;
 use App\Models\ProvinceModel;
 use App\Models\RegencyModel;
+use App\Models\MasjidNewsModel;
+use App\Models\MasjidNewsCategoryModel;
 use App\Libraries\Storage;
 
 class Admin extends BaseController
@@ -200,7 +202,155 @@ class Admin extends BaseController
 
     public function berita(): string
     {
-        return view('dashboard/berita', ['title' => 'Berita & Dokumentasi - Masj.id']);
+        $masjidId = session()->get('masjid_id');
+        $newsModel = new \App\Models\MasjidNewsModel();
+        $categoryModel = new \App\Models\MasjidNewsCategoryModel();
+
+        $news = $newsModel->select('masjid_news.*, masjid_news_categories.name as category_name')
+            ->join('masjid_news_categories', 'masjid_news_categories.id = masjid_news.category_id', 'left')
+            ->where('masjid_news.masjid_id', $masjidId)
+            ->orderBy('masjid_news.created_at', 'DESC')
+            ->findAll();
+
+        $categories = $categoryModel->where('masjid_id', $masjidId)->findAll();
+
+        return view('dashboard/berita/index', [
+            'title' => 'Berita & Dokumentasi - Masj.id',
+            'news' => $news,
+            'categories' => $categories,
+            'storage' => new Storage()
+        ]);
+    }
+
+    public function createBerita()
+    {
+        $masjidId = session()->get('masjid_id');
+        $categoryModel = new \App\Models\MasjidNewsCategoryModel();
+        $categories = $categoryModel->where('masjid_id', $masjidId)->findAll();
+
+        return view('dashboard/berita/form', [
+            'title' => 'Tulis Berita Baru - Masj.id',
+            'categories' => $categories,
+            'news' => null
+        ]);
+    }
+
+    public function editBerita($id)
+    {
+        $masjidId = session()->get('masjid_id');
+        $newsModel = new \App\Models\MasjidNewsModel();
+        $news = $newsModel->where(['id' => $id, 'masjid_id' => $masjidId])->first();
+
+        if (!$news) {
+            return redirect()->to('/dashboard/berita')->with('error', 'Berita tidak ditemukan.');
+        }
+
+        $categoryModel = new \App\Models\MasjidNewsCategoryModel();
+        $categories = $categoryModel->where('masjid_id', $masjidId)->findAll();
+
+        return view('dashboard/berita/form', [
+            'title' => 'Edit Berita - Masj.id',
+            'categories' => $categories,
+            'news' => $news,
+            'storage' => new Storage()
+        ]);
+    }
+
+    public function saveBerita()
+    {
+        $masjidId = session()->get('masjid_id');
+        $newsModel = new \App\Models\MasjidNewsModel();
+        $newsId = $this->request->getPost('id');
+
+        $data = [
+            'masjid_id'   => $masjidId,
+            'category_id' => $this->request->getPost('category_id') ?: null,
+            'title'       => $this->request->getPost('title'),
+            'slug'        => url_title($this->request->getPost('title'), '-', true),
+            'content'     => $this->request->getPost('content'),
+            'status'      => $this->request->getPost('status') ?: 'published'
+        ];
+
+        // Handle Thumbnail
+        $file = $this->request->getFile('thumbnail');
+        if ($file && $file->isValid() && !$file->hasMoved()) {
+            $storage = new Storage();
+            if ($newsId) {
+                $oldNews = $newsModel->find($newsId);
+                if (!empty($oldNews['thumbnail'])) {
+                    $storage->delete($oldNews['thumbnail']);
+                }
+            }
+            $uploadPath = $storage->upload($file, 'images/news');
+            if ($uploadPath) {
+                $data['thumbnail'] = $uploadPath;
+            }
+        }
+
+        if ($newsId) {
+            $newsModel->update($newsId, $data);
+            $msg = 'Berita berhasil diperbarui.';
+        } else {
+            $newsModel->insert($data);
+            $msg = 'Berita berhasil diterbitkan.';
+        }
+
+        return redirect()->to('/dashboard/berita')->with('success', $msg);
+    }
+
+    public function deleteBerita()
+    {
+        $masjidId = session()->get('masjid_id');
+        $newsId = $this->request->getPost('id');
+        $newsModel = new \App\Models\MasjidNewsModel();
+
+        $news = $newsModel->where(['id' => $newsId, 'masjid_id' => $masjidId])->first();
+        if ($news) {
+            if (!empty($news['thumbnail'])) {
+                $st = new Storage();
+                $st->delete($news['thumbnail']);
+            }
+            $newsModel->delete($newsId);
+            return $this->response->setJSON(['status' => 'success', 'message' => 'Berita berhasil dihapus.']);
+        }
+
+        return $this->response->setJSON(['status' => 'error', 'message' => 'Berita tidak ditemukan.']);
+    }
+
+    public function saveNewsCategory()
+    {
+        $masjidId = session()->get('masjid_id');
+        $categoryModel = new \App\Models\MasjidNewsCategoryModel();
+        
+        $data = [
+            'masjid_id' => $masjidId,
+            'name'      => $this->request->getPost('name'),
+            'slug'      => url_title($this->request->getPost('name'), '-', true)
+        ];
+
+        $id = $this->request->getPost('id');
+        if ($id) {
+            $categoryModel->update($id, $data);
+        } else {
+            $categoryModel->insert($data);
+        }
+
+        return redirect()->back()->with('success', 'Kategori berita berhasil disimpan.');
+    }
+
+    public function deleteNewsCategory()
+    {
+        $masjidId = session()->get('masjid_id');
+        $id = $this->request->getPost('id');
+        $categoryModel = new \App\Models\MasjidNewsCategoryModel();
+
+        $cat = $categoryModel->where(['id' => $id, 'masjid_id' => $masjidId])->first();
+        if ($cat) {
+            $categoryModel->delete($id);
+            return $this->response->setJSON(['status' => 'success', 'message' => 'Kategori berhasil dihapus.']);
+        }
+
+        return $this->response->setJSON(['status' => 'error', 'message' => 'Kategori tidak ditemukan.']);
     }
 
     public function keuangan(): string
