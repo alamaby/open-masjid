@@ -5,35 +5,40 @@
     </div>
 </div>
 <div class="flex-1 overflow-y-auto p-4 sidebar-scroll">
-<div class="mb-6">
-<p class="px-3 mb-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Menu Utama</p>
-<nav class="flex flex-col gap-1">
-<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg active-nav shadow-sm" href="<?= base_url('dashboard') ?>">
-<span class="material-symbols-outlined text-xl">dashboard</span>
-<span class="text-sm font-semibold">Dashboard</span>
-</a>
-
-<?php if (session()->get('role') === 'pengurus'): ?>
-<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors" href="<?= base_url('dashboard/profil') ?>">
-<span class="material-symbols-outlined text-xl">account_balance</span>
-<span class="text-sm font-medium">Profil Masjid</span>
-</a>
-<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors" href="<?= base_url('dashboard/program') ?>">
-<span class="material-symbols-outlined text-xl">list_alt</span>
-<span class="text-sm font-medium">Program & Kegiatan</span>
-</a>
-<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors" href="<?= base_url('dashboard/berita') ?>">
-<span class="material-symbols-outlined text-xl">newspaper</span>
-<span class="text-sm font-medium">Berita & Dokumentasi</span>
-</a>
-<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors" href="<?= base_url('dashboard/keuangan') ?>">
-<span class="material-symbols-outlined text-xl">payments</span>
-<span class="text-sm font-medium">Keuangan & Donasi</span>
-</a>
-<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors" href="#">
-<span class="material-symbols-outlined text-xl">groups_3</span>
-<span class="text-sm font-medium">Data Warga & Bantuan</span>
-</a>
+    <div class="mb-6">
+        <p class="px-3 mb-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Menu Utama</p>
+        <nav class="flex flex-col gap-1">
+            <?php
+                $uri = uri_string();
+                $activeClass = 'active-nav shadow-sm';
+                $inactiveClass = 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors';
+            ?>
+            <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg <?= ($uri == 'dashboard' || $uri == 'dashboard/') ? $activeClass : $inactiveClass ?>" href="<?= base_url('dashboard') ?>">
+                <span class="material-symbols-outlined text-xl">dashboard</span>
+                <span class="text-sm font-semibold">Dashboard</span>
+            </a>
+            
+            <?php if (session()->get('role') === 'pengurus'): ?>
+            <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg <?= ($uri == 'dashboard/profil') ? $activeClass : $inactiveClass ?>" href="<?= base_url('dashboard/profil') ?>">
+                <span class="material-symbols-outlined text-xl">account_balance</span>
+                <span class="text-sm font-medium">Profil Masjid</span>
+            </a>
+            <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg <?= ($uri == 'dashboard/program') ? $activeClass : $inactiveClass ?>" href="<?= base_url('dashboard/program') ?>">
+                <span class="material-symbols-outlined text-xl">list_alt</span>
+                <span class="text-sm font-medium">Program & Kegiatan</span>
+            </a>
+            <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg <?= ($uri == 'dashboard/berita') ? $activeClass : $inactiveClass ?>" href="<?= base_url('dashboard/berita') ?>">
+                <span class="material-symbols-outlined text-xl">newspaper</span>
+                <span class="text-sm font-medium">Berita & Dokumentasi</span>
+            </a>
+            <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg <?= ($uri == 'dashboard/keuangan') ? $activeClass : $inactiveClass ?>" href="<?= base_url('dashboard/keuangan') ?>">
+                <span class="material-symbols-outlined text-xl">payments</span>
+                <span class="text-sm font-medium">Keuangan & Donasi</span>
+            </a>
+            <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg <?= $inactiveClass ?>" href="#">
+                <span class="material-symbols-outlined text-xl">groups_3</span>
+                <span class="text-sm font-medium">Data Warga & Bantuan</span>
+            </a>
 <?php else: ?>
 <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors" href="#">
 <span class="material-symbols-outlined text-xl">volunteer_activism</span>
