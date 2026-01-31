@@ -1,4 +1,4 @@
-<?= $this->extend('layout/landing') ?>
+<?= $this->extend('layout/masjid_public') ?>
 
 <?= $this->section('content') ?>
 
@@ -49,7 +49,7 @@
 </section>
 
 <!-- Vision & Mission -->
-<section class="py-24 px-6 bg-white dark:bg-background-dark">
+<section id="tentang" class="py-24 px-6 bg-white dark:bg-background-dark">
     <div class="max-w-[1200px] mx-auto">
         <div class="grid lg:grid-cols-2 gap-16 items-start">
             <div class="space-y-8">
@@ -119,7 +119,7 @@
 
 <!-- Committee Section -->
 <?php if (!empty($pengurus)): ?>
-<section class="py-24 px-6 bg-background-light dark:bg-background-dark/50">
+<section id="pengurus" class="py-24 px-6 bg-background-light dark:bg-background-dark/50">
     <div class="max-w-[1200px] mx-auto">
         <div class="text-center mb-16">
             <h2 class="text-sm font-bold text-primary uppercase tracking-[0.2em] mb-3">Struktur Organisasi</h2>
@@ -166,7 +166,7 @@
 
 <!-- Gallery Section -->
 <?php if (!empty($gallery)): ?>
-<section class="py-24 px-6 bg-white dark:bg-background-dark overflow-hidden">
+<section id="galeri" class="py-24 px-6 bg-white dark:bg-background-dark overflow-hidden">
     <div class="max-w-[1200px] mx-auto">
         <div class="flex flex-col md:flex-row justify-between items-end gap-8 mb-16">
             <div>
