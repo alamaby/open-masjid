@@ -6,7 +6,6 @@ use CodeIgniter\Router\RouteCollection;
  * @var RouteCollection $routes
  */
 $routes->get('/', 'Home::index');
-$routes->get('u/(:any)', 'Home::masjid/$1');
 $routes->get('fitur', 'Home::fitur');
 $routes->get('kebaikan', 'Home::kebaikan');
 $routes->get('tentang', 'Home::tentang');
@@ -34,3 +33,6 @@ $routes->post('dashboard/gallery/delete', 'Admin::deleteGallery');
 $routes->get('dashboard/program', 'Admin::program');
 $routes->get('dashboard/berita', 'Admin::berita');
 $routes->get('dashboard/keuangan', 'Admin::keuangan');
+
+// Public Profile (Catch-all)
+$routes->get('(:any)', 'Home::masjid/$1');
