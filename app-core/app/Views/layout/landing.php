@@ -3,7 +3,25 @@
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title><?= $title ?? 'Masj.id - Manajemen Masjid Modern & Transparan' ?></title>
+    <title><?= $title ?? env('seo.title') ?></title>
+    <link rel="icon" type="image/png" href="<?= base_url('public/ico_masjid.png') ?>">
+    <meta name="description" content="<?= env('seo.description') ?>">
+    <meta name="keywords" content="<?= env('seo.keywords') ?>">
+    <meta name="author" content="<?= env('seo.author') ?>">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="<?= current_url() ?>">
+    <meta property="og:title" content="<?= $title ?? env('seo.title') ?>">
+    <meta property="og:description" content="<?= env('seo.description') ?>">
+    <meta property="og:image" content="<?= env('seo.ogImage') ?>">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="<?= current_url() ?>">
+    <meta property="twitter:title" content="<?= $title ?? env('seo.title') ?>">
+    <meta property="twitter:description" content="<?= env('seo.description') ?>">
+    <meta property="twitter:image" content="<?= env('seo.ogImage') ?>">
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
@@ -58,9 +76,7 @@
         <div class="max-w-[1200px] mx-auto grid md:grid-cols-4 gap-12">
             <div class="col-span-1 md:col-span-2 flex flex-col gap-6">
                 <a href="<?= base_url() ?>" class="flex items-center gap-2">
-                    <div class="size-6 bg-primary rounded flex items-center justify-center text-white">
-                        <span class="material-symbols-outlined text-sm">mosque</span>
-                    </div>
+                    <img src="<?= base_url('public/logo.png') ?>" alt="Logo Masj.id" class="h-6">
                     <h2 class="text-lg font-bold tracking-tight text-primary">Masj.id</h2>
                 </a>
                 <p class="text-[#3d5a4d] dark:text-gray-400 max-w-[320px]">

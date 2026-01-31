@@ -1,9 +1,7 @@
 <aside class="w-72 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col h-screen sticky top-0">
 <div class="p-6 border-b border-slate-100 dark:border-slate-800">
 <div class="flex items-center gap-3">
-<div class="size-11 rounded-xl bg-primary flex items-center justify-center text-white shadow-lg shadow-primary/20">
-<span class="material-symbols-outlined text-2xl">mosque</span>
-</div>
+<img src="<?= base_url('public/logo.png') ?>" alt="Logo Masj.id" class="h-10">
 <div>
 <h1 class="text-base font-bold leading-tight">Masjid Amanah</h1>
 <p class="text-[11px] text-slate-500 font-medium">Kota Administrasi</p>
