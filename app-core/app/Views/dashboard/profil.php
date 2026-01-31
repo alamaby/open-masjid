@@ -64,10 +64,12 @@
                         <label class="block text-sm font-semibold text-[#111816] dark:text-white mb-1.5">Jenis Masjid</label>
                         <select name="jenis_masjid" class="w-full rounded-lg border-[#dbe6e3] dark:bg-white/5 dark:border-white/10 focus:border-primary focus:ring-primary">
                             <option value="">Pilih Jenis</option>
-                            <option value="Masjid Agung" <?= ($masjid['jenis_masjid'] ?? '') == 'Masjid Agung' ? 'selected' : '' ?>>Masjid Agung</option>
-                            <option value="Masjid Raya" <?= ($masjid['jenis_masjid'] ?? '') == 'Masjid Raya' ? 'selected' : '' ?>>Masjid Raya</option>
-                            <option value="Masjid Besar" <?= ($masjid['jenis_masjid'] ?? '') == 'Masjid Besar' ? 'selected' : '' ?>>Masjid Besar</option>
-                            <option value="Masjid Jami" <?= ($masjid['jenis_masjid'] ?? '') == 'Masjid Jami' ? 'selected' : '' ?>>Masjid Jami</option>
+                            <option value="Masjid Raya / Agung (Wilayah)" <?= ($masjid['jenis_masjid'] ?? '') == 'Masjid Raya / Agung (Wilayah)' ? 'selected' : '' ?>>Masjid Raya / Agung (Regional/Pusat)</option>
+                            <option value="Masjid Besar / Jami (Lokal)" <?= ($masjid['jenis_masjid'] ?? '') == 'Masjid Besar / Jami (Lokal)' ? 'selected' : '' ?>>Masjid Besar / Jami (Kecamatan/Kelurahan)</option>
+                            <option value="Masjid Perumahan" <?= ($masjid['jenis_masjid'] ?? '') == 'Masjid Perumahan' ? 'selected' : '' ?>>Masjid Perumahan</option>
+                            <option value="Masjid Kampung" <?= ($masjid['jenis_masjid'] ?? '') == 'Masjid Kampung' ? 'selected' : '' ?>>Masjid Kampung</option>
+                            <option value="Masjid Tempat Publik (Kantor/Umum)" <?= ($masjid['jenis_masjid'] ?? '') == 'Masjid Tempat Publik (Kantor/Umum)' ? 'selected' : '' ?>>Masjid Tempat Publik (Kantor/Mall/RS)</option>
+                            <option value="Musholla / Langgar" <?= ($masjid['jenis_masjid'] ?? '') == 'Musholla / Langgar' ? 'selected' : '' ?>>Musholla / Langgar</option>
                         </select>
                     </div>
                 </div>
