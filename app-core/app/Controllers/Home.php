@@ -194,15 +194,31 @@ class Home extends BaseController
         }
 
         $programModel = new \App\Models\MasjidProgramModel();
-        $programs = $programModel->where(['masjid_id' => $masjid['id'], 'status' => 'published'])
-            ->orderBy('date_start', 'ASC')
-            ->findAll();
+        $query = $programModel->select('masjid_programs.*, masjid_program_categories.name as category_name')
+            ->join('masjid_program_categories', 'masjid_program_categories.id = masjid_programs.category_id', 'left')
+            ->where(['masjid_programs.masjid_id' => $masjid['id'], 'masjid_programs.status' => 'published']);
+
+        $catSlug = $this->request->getGet('category');
+        if ($catSlug) {
+            $categoryModel = new \App\Models\MasjidProgramCategoryModel();
+            $category = $categoryModel->where(['slug' => $catSlug, 'masjid_id' => $masjid['id']])->first();
+            if ($category) {
+                $query->where('masjid_programs.category_id', $category['id']);
+            }
+        }
+
+        $programs = $query->orderBy('date_start', 'ASC')->findAll();
+
+        $categoryModel = new \App\Models\MasjidProgramCategoryModel();
+        $categories = $categoryModel->where('masjid_id', $masjid['id'])->findAll();
 
         return view('public/program_list', [
-            'title'    => 'Program & Kegiatan - ' . esc($masjid['name']),
-            'masjid'   => $masjid,
-            'programs' => $programs,
-            'storage'  => new \App\Libraries\Storage()
+            'title'      => 'Program & Kegiatan - ' . esc($masjid['name']),
+            'masjid'     => $masjid,
+            'programs'   => $programs,
+            'categories' => $categories,
+            'activeCat'  => $catSlug,
+            'storage'    => new \App\Libraries\Storage()
         ]);
     }
 
@@ -216,7 +232,10 @@ class Home extends BaseController
         }
 
         $programModel = new \App\Models\MasjidProgramModel();
-        $program = $programModel->where(['masjid_id' => $masjid['id'], 'slug' => $slug])->first();
+        $program = $programModel->select('masjid_programs.*, masjid_program_categories.name as category_name')
+            ->join('masjid_program_categories', 'masjid_program_categories.id = masjid_programs.category_id', 'left')
+            ->where(['masjid_programs.masjid_id' => $masjid['id'], 'masjid_programs.slug' => $slug])
+            ->first();
 
         if (!$program) {
             throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound("Program tidak ditemukan.");

@@ -43,6 +43,8 @@ $routes->get('dashboard/program/create', 'Admin::createProgram');
 $routes->get('dashboard/program/edit/(:num)', 'Admin::editProgram/$1');
 $routes->post('dashboard/program/save', 'Admin::saveProgram');
 $routes->get('dashboard/program/delete/(:num)', 'Admin::deleteProgram/$1');
+$routes->post('dashboard/program/category/save', 'Admin::saveProgramCategory');
+$routes->post('dashboard/program/category/delete', 'Admin::deleteProgramCategory');
 
 $routes->get('dashboard/keuangan', 'Admin::keuangan');
 

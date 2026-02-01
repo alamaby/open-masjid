@@ -19,6 +19,12 @@
 
         <div class="flex flex-wrap items-center gap-6 text-sm text-[#608a7e] animate-in fade-in duration-1000 delay-300">
             <div class="flex items-center gap-2">
+                <span class="px-3 py-1 bg-primary text-white text-[10px] font-black uppercase tracking-widest rounded-lg">
+                    <?= esc($program['category_name'] ?: 'Umum') ?>
+                </span>
+            </div>
+            <div class="h-8 w-px bg-gray-100 dark:bg-white/10 hidden sm:block"></div>
+            <div class="flex items-center gap-2">
                 <div class="size-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
                     <span class="material-symbols-outlined text-lg">mosque</span>
                 </div>

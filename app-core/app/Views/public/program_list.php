@@ -14,6 +14,18 @@
 <!-- Main Grid -->
 <section class="pb-32 px-6">
     <div class="max-w-[1200px] mx-auto">
+        <!-- Category Filter -->
+        <div class="flex flex-wrap items-center justify-center gap-2 mb-16 animate-in fade-in duration-1000 delay-400">
+            <a href="<?= base_url($masjid['username'] . '/program') ?>" class="px-6 py-3 rounded-full text-sm font-bold transition-all <?= !$activeCat ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'bg-gray-50 text-[#608a7e] hover:bg-gray-100' ?>">
+                Semua Program
+            </a>
+            <?php foreach ($categories as $cat): ?>
+                <a href="<?= base_url($masjid['username'] . '/program?category=' . $cat['slug']) ?>" class="px-6 py-3 rounded-full text-sm font-bold transition-all <?= $activeCat == $cat['slug'] ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'bg-gray-50 text-[#608a7e] hover:bg-gray-100' ?>">
+                    <?= esc($cat['name']) ?>
+                </a>
+            <?php endforeach; ?>
+        </div>
+
         <?php if (empty($programs)): ?>
             <div class="p-20 bg-white dark:bg-white/5 rounded-[3rem] border border-dashed border-[#dbe6e1] dark:border-white/10 text-center animate-in fade-in zoom-in duration-700">
                 <div class="size-20 bg-slate-50 dark:bg-white/5 rounded-full flex items-center justify-center text-slate-300 mx-auto mb-6">
@@ -43,6 +55,11 @@
                         </div>
 
                         <div class="p-8 flex-1 flex flex-col">
+                            <div class="flex items-center gap-2 mb-4">
+                                <span class="px-3 py-1 bg-primary/10 text-primary text-[10px] font-black uppercase tracking-widest rounded-lg italic">
+                                    <?= esc($item['category_name'] ?: 'Umum') ?>
+                                </span>
+                            </div>
                             <h4 class="text-2xl font-black mb-6 group-hover:text-primary transition-colors line-clamp-2 leading-tight"><?= esc($item['title']) ?></h4>
                             
                             <div class="space-y-3 mb-8">

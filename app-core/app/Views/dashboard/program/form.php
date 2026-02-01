@@ -23,9 +23,22 @@
                 <!-- Main Body -->
                 <div class="md:col-span-2 space-y-6">
                     <div class="bg-white dark:bg-white/5 rounded-3xl border border-[#e5e7eb] dark:border-white/10 p-8 space-y-6">
-                        <div>
-                            <label class="block text-sm font-bold mb-2">Nama Program / Kegiatan</label>
-                            <input type="text" name="title" value="<?= old('title', $program['title'] ?? '') ?>" required placeholder="Contoh: Kajian Rutin Ahad Pagi" class="w-full bg-[#f0f5f3] dark:bg-white/5 border-none rounded-2xl text-lg font-bold focus:ring-2 focus:ring-primary p-4">
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-bold mb-2">Kategori Program</label>
+                                <select name="category_id" class="w-full bg-[#f0f5f3] dark:bg-white/5 border-none rounded-2xl focus:ring-2 focus:ring-primary p-4 text-sm font-bold">
+                                    <option value="">-- Tanpa Kategori --</option>
+                                    <?php foreach ($categories as $cat): ?>
+                                        <option value="<?= $cat['id'] ?>" <?= (old('category_id', $program['category_id'] ?? '') == $cat['id']) ? 'selected' : '' ?>>
+                                            <?= esc($cat['name']) ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold mb-2">Nama Program / Kegiatan</label>
+                                <input type="text" name="title" value="<?= old('title', $program['title'] ?? '') ?>" required placeholder="Contoh: Kajian Rutin Ahad Pagi" class="w-full bg-[#f0f5f3] dark:bg-white/5 border-none rounded-2xl text-lg font-bold focus:ring-2 focus:ring-primary p-4">
+                            </div>
                         </div>
 
                         <div>

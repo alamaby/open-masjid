@@ -550,23 +550,33 @@ class Admin extends BaseController
         $masjidId = session()->get('masjid_id');
         $programModel = new \App\Models\MasjidProgramModel();
         
-        $programs = $programModel->where('masjid_id', $masjidId)
-            ->orderBy('date_start', 'DESC')
+        $programs = $programModel->select('masjid_programs.*, masjid_program_categories.name as category_name')
+            ->join('masjid_program_categories', 'masjid_program_categories.id = masjid_programs.category_id', 'left')
+            ->where('masjid_programs.masjid_id', $masjidId)
+            ->orderBy('masjid_programs.date_start', 'DESC')
             ->findAll();
 
+        $categoryModel = new \App\Models\MasjidProgramCategoryModel();
+        $categories = $categoryModel->where('masjid_id', $masjidId)->findAll();
+
         return view('dashboard/program/index', [
-            'title'    => 'Program & Kegiatan - Masj.id',
-            'programs' => $programs,
-            'storage'  => new Storage()
+            'title'      => 'Program & Kegiatan - Masj.id',
+            'programs'   => $programs,
+            'categories' => $categories,
+            'storage'    => new Storage()
         ]);
     }
 
     public function createProgram()
     {
+        $masjidId = session()->get('masjid_id');
+        $categoryModel = new \App\Models\MasjidProgramCategoryModel();
+        
         return view('dashboard/program/form', [
-            'title'   => 'Buat Program Baru - Masj.id',
-            'program' => null,
-            'storage' => new Storage()
+            'title'      => 'Buat Program Baru - Masj.id',
+            'program'    => null,
+            'categories' => $categoryModel->where('masjid_id', $masjidId)->findAll(),
+            'storage'    => new Storage()
         ]);
     }
 
@@ -580,10 +590,13 @@ class Admin extends BaseController
             return redirect()->to('dashboard/program')->with('error', 'Program tidak ditemukan.');
         }
 
+        $categoryModel = new \App\Models\MasjidProgramCategoryModel();
+
         return view('dashboard/program/form', [
-            'title'   => 'Edit Program - Masj.id',
-            'program' => $program,
-            'storage' => new Storage()
+            'title'      => 'Edit Program - Masj.id',
+            'program'    => $program,
+            'categories' => $categoryModel->where('masjid_id', $masjidId)->findAll(),
+            'storage'    => new Storage()
         ]);
     }
 
@@ -603,6 +616,7 @@ class Admin extends BaseController
 
         $data = [
             'masjid_id'         => $masjidId,
+            'category_id'       => $this->request->getPost('category_id') ?: null,
             'title'             => $this->request->getPost('title'),
             'slug'              => $slug,
             'description'       => $this->request->getPost('description'),
@@ -656,5 +670,47 @@ class Admin extends BaseController
         }
 
         return redirect()->to('dashboard/program')->with('error', 'Program tidak ditemukan.');
+    }
+
+    public function saveProgramCategory()
+    {
+        $masjidId = session()->get('masjid_id');
+        $categoryModel = new \App\Models\MasjidProgramCategoryModel();
+        $id = $this->request->getPost('id');
+
+        $data = [
+            'masjid_id' => $masjidId,
+            'name'      => $this->request->getPost('name'),
+            'slug'      => url_title($this->request->getPost('name'), '-', true)
+        ];
+
+        if ($id) {
+            $categoryModel->update($id, $data);
+            $message = 'Kategori berhasil diperbarui.';
+        } else {
+            $categoryModel->insert($data);
+            $message = 'Kategori baru berhasil ditambahkan.';
+        }
+
+        return redirect()->to('dashboard/program')->with('success', $message);
+    }
+
+    public function deleteProgramCategory()
+    {
+        $masjidId = session()->get('masjid_id');
+        $id = $this->request->getPost('id');
+        $categoryModel = new \App\Models\MasjidProgramCategoryModel();
+
+        $category = $categoryModel->where(['id' => $id, 'masjid_id' => $masjidId])->first();
+        if ($category) {
+            // Set program category_id to NULL for programs using this category
+            $programModel = new \App\Models\MasjidProgramModel();
+            $programModel->where('category_id', $id)->set(['category_id' => null])->update();
+            
+            $categoryModel->delete($id);
+            return $this->response->setJSON(['status' => 'success', 'message' => 'Kategori berhasil dihapus.']);
+        }
+
+        return $this->response->setJSON(['status' => 'error', 'message' => 'Kategori tidak ditemukan.']);
     }
 }
