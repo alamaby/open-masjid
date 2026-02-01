@@ -61,14 +61,14 @@
                     </p>
                 </div>
                 
-                <?php if (!empty($wilayah)): ?>
+                <?php if (!empty($service_areas)): ?>
                 <div class="bg-primary/5 border border-primary/10 rounded-2xl p-6">
                     <h4 class="font-bold text-primary mb-3 flex items-center gap-2">
                         <span class="material-symbols-outlined">map</span>
                         Wilayah Layanan Kami:
                     </h4>
                     <div class="flex flex-wrap gap-2">
-                        <?php foreach ($wilayah as $w): ?>
+                        <?php foreach ($service_areas as $w): ?>
                             <span class="px-3 py-1 bg-white border border-primary/20 rounded-full text-xs font-semibold text-primary"><?= esc($w['name']) ?></span>
                         <?php endforeach; ?>
                     </div>
@@ -272,15 +272,44 @@
 </section>
 <?php endif; ?>
 
-<!-- Laporan Section (Placeholder) -->
+<!-- Laporan Transparansi -->
 <?php if ($masjid['menu_laporan'] ?? 1): ?>
-<section id="laporan" class="py-24 px-6 bg-background-light dark:bg-background-dark/50 overflow-hidden">
-    <div class="max-w-[1200px] mx-auto text-center">
-        <h2 class="text-sm font-bold text-primary uppercase tracking-[0.2em] mb-3">Transparansi</h2>
-        <h3 class="text-3xl md:text-5xl font-black mb-8">Laporan Keuangan</h3>
-        <div class="p-12 bg-white dark:bg-[#1a2e25] rounded-[2.5rem] border border-dashed border-[#dbe6e1] dark:border-[#1e3a2f]">
-            <span class="material-symbols-outlined text-6xl text-primary/20 mb-4 font-light">account_balance_wallet</span>
-            <p class="text-[#608a7e] font-medium">Laporan keuangan bulanan akan segera ditampilkan di sini.</p>
+<section id="laporan" class="py-24 px-6 bg-background-light dark:bg-background-dark/50 relative overflow-hidden">
+    <div class="max-w-[1200px] mx-auto relative z-10">
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16">
+            <div class="max-w-xl">
+                <h2 class="text-sm font-bold text-primary uppercase tracking-[0.2em] mb-3">Transparansi</h2>
+                <h3 class="text-3xl md:text-5xl font-black mb-6 tracking-tight leading-none text-[#111816] dark:text-white">Laporan Keuangan</h3>
+                <p class="text-lg text-[#608a7e]">Laporan keuangan masjid yang dikelola secara terbuka untuk jamaah.</p>
+            </div>
+            <div class="bg-primary px-8 py-6 rounded-[2rem] text-white shadow-2xl shadow-primary/20">
+                <p class="text-emerald-200 text-[10px] font-black uppercase tracking-widest mb-1">Saldo Saat Ini</p>
+                <h3 class="text-3xl font-black">Rp <?= number_format($financeSummary['balance'], 0, ',', '.') ?></h3>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="bg-white dark:bg-white/5 rounded-[3rem] p-10 border border-[#dbe6e1] dark:border-white/10 group hover:shadow-2xl transition-all duration-500">
+                <div class="flex items-center gap-4 mb-8">
+                    <div class="size-16 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-600">
+                        <span class="material-symbols-outlined text-3xl">trending_up</span>
+                    </div>
+                    <h4 class="text-xl font-bold">Total Pemasukan</h4>
+                </div>
+                <div class="text-4xl font-black text-emerald-600 mb-4">Rp <?= number_format($financeSummary['total_income'], 0, ',', '.') ?></div>
+                <p class="text-[#608a7e] text-sm leading-relaxed">Akumulasi donasi, zakat, infaq dan sedekah dari jamaah.</p>
+            </div>
+
+            <div class="bg-white dark:bg-white/5 rounded-[3rem] p-10 border border-[#dbe6e1] dark:border-white/10 group hover:shadow-2xl transition-all duration-500">
+                <div class="flex items-center gap-4 mb-8">
+                    <div class="size-16 bg-red-50 rounded-2xl flex items-center justify-center text-red-500">
+                        <span class="material-symbols-outlined text-3xl">trending_down</span>
+                    </div>
+                    <h4 class="text-xl font-bold">Total Pengeluaran</h4>
+                </div>
+                <div class="text-4xl font-black text-red-500 mb-4">Rp <?= number_format($financeSummary['total_expense'], 0, ',', '.') ?></div>
+                <p class="text-[#608a7e] text-sm leading-relaxed">Penggunaan dana untuk operasional dan program masjid.</p>
+            </div>
         </div>
     </div>
 </section>

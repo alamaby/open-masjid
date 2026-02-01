@@ -98,22 +98,25 @@ class Home extends BaseController
 
         $programModel = new \App\Models\MasjidProgramModel();
         $programs = $programModel->where(['masjid_id' => $masjid['id'], 'status' => 'published'])
-            ->where('date_start >=', date('Y-m-d H:i:s'))
             ->orderBy('date_start', 'ASC')
             ->limit(3)
             ->findAll();
 
+        $financeModel = new \App\Models\MasjidFinanceTransactionModel();
+        $financeSummary = $financeModel->getSummary($masjid['id']);
+
         $storage = new \App\Libraries\Storage();
 
         return view('public/masjid_profile', [
-            'title'    => esc($masjid['name']) . ' - Masj.id',
-            'masjid'   => $masjid,
-            'pengurus' => $pengurus,
-            'gallery'  => $gallery,
-            'wilayah'  => $wilayah,
-            'news'     => $news,
-            'programs' => $programs,
-            'storage'  => $storage
+            'title'          => esc($masjid['name']),
+            'masjid'         => $masjid,
+            'pengurus'       => $pengurus,
+            'gallery'        => $gallery,
+            'service_areas'  => $wilayah,
+            'news'           => $news,
+            'programs'       => $programs,
+            'financeSummary' => $financeSummary,
+            'storage'        => $storage
         ]);
     }
 

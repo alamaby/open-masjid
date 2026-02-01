@@ -367,7 +367,32 @@ class Admin extends BaseController
 
     public function keuangan(): string
     {
-        return view('dashboard/keuangan', ['title' => 'Manajemen Keuangan - Masj.id']);
+        $masjidId = session()->get('masjid_id');
+        $transactionModel = new \App\Models\MasjidFinanceTransactionModel();
+        $categoryModel = new \App\Models\MasjidFinanceCategoryModel();
+        $programModel = new \App\Models\MasjidProgramModel();
+
+        $summary = $transactionModel->getSummary($masjidId);
+        
+        $transactions = $transactionModel->select('masjid_finance_transactions.*, masjid_finance_categories.name as category_name, masjid_programs.title as program_title')
+            ->join('masjid_finance_categories', 'masjid_finance_categories.id = masjid_finance_transactions.category_id', 'left')
+            ->join('masjid_programs', 'masjid_programs.id = masjid_finance_transactions.program_id', 'left')
+            ->where('masjid_finance_transactions.masjid_id', $masjidId)
+            ->orderBy('masjid_finance_transactions.date', 'DESC')
+            ->orderBy('masjid_finance_transactions.created_at', 'DESC')
+            ->findAll();
+
+        $categories = $categoryModel->where('masjid_id', $masjidId)->findAll();
+        $programs = $programModel->where('masjid_id', $masjidId)->findAll();
+
+        return view('dashboard/keuangan/index', [
+            'title'        => 'Manajemen Keuangan - Masj.id',
+            'summary'      => $summary,
+            'transactions' => $transactions,
+            'categories'   => $categories,
+            'programs'     => $programs,
+            'storage'      => new Storage()
+        ]);
     }
 
     public function getRegencies($provinceId)
@@ -712,5 +737,111 @@ class Admin extends BaseController
         }
 
         return $this->response->setJSON(['status' => 'error', 'message' => 'Kategori tidak ditemukan.']);
+    }
+
+    public function saveFinanceCategory()
+    {
+        $masjidId = session()->get('masjid_id');
+        $categoryModel = new \App\Models\MasjidFinanceCategoryModel();
+        $id = $this->request->getPost('id');
+
+        $data = [
+            'masjid_id' => $masjidId,
+            'name'      => $this->request->getPost('name'),
+            'type'      => $this->request->getPost('type'),
+            'slug'      => url_title($this->request->getPost('name'), '-', true)
+        ];
+
+        if ($id) {
+            $categoryModel->update($id, $data);
+            $message = 'Kategori keuangan berhasil diperbarui.';
+        } else {
+            $categoryModel->insert($data);
+            $message = 'Kategori keuangan baru berhasil ditambahkan.';
+        }
+
+        return redirect()->to('dashboard/keuangan')->with('success', $message);
+    }
+
+    public function deleteFinanceCategory()
+    {
+        $masjidId = session()->get('masjid_id');
+        $id = $this->request->getPost('id');
+        $categoryModel = new \App\Models\MasjidFinanceCategoryModel();
+
+        $category = $categoryModel->where(['id' => $id, 'masjid_id' => $masjidId])->first();
+        if ($category) {
+            // Set transaction category_id to NULL
+            $transactionModel = new \App\Models\MasjidFinanceTransactionModel();
+            $transactionModel->where('category_id', $id)->set(['category_id' => null])->update();
+            
+            $categoryModel->delete($id);
+            return $this->response->setJSON(['status' => 'success', 'message' => 'Kategori berhasil dihapus.']);
+        }
+
+        return $this->response->setJSON(['status' => 'error', 'message' => 'Kategori tidak ditemukan.']);
+    }
+
+    public function saveFinanceTransaction()
+    {
+        $masjidId = session()->get('masjid_id');
+        $transactionModel = new \App\Models\MasjidFinanceTransactionModel();
+        $id = $this->request->getPost('id');
+
+        $data = [
+            'masjid_id'   => $masjidId,
+            'category_id' => $this->request->getPost('category_id'),
+            'program_id'  => $this->request->getPost('program_id') ?: null,
+            'date'        => $this->request->getPost('date'),
+            'amount'      => str_replace(['.', ','], ['', '.'], $this->request->getPost('amount')),
+            'type'        => $this->request->getPost('type'),
+            'description' => $this->request->getPost('description'),
+            'donor_name'  => $this->request->getPost('donor_name'),
+            'donor_phone' => $this->request->getPost('donor_phone'),
+        ];
+
+        // Handle Attachment
+        $file = $this->request->getFile('attachment');
+        if ($file && $file->isValid() && !$file->hasMoved()) {
+            $storage = new Storage();
+            if ($id) {
+                $oldTrans = $transactionModel->find($id);
+                if (!empty($oldTrans['attachment'])) {
+                    $storage->delete($oldTrans['attachment']);
+                }
+            }
+            $uploadPath = $storage->upload($file, 'images/finance');
+            if ($uploadPath) {
+                $data['attachment'] = $uploadPath;
+            }
+        }
+
+        if ($id) {
+            $transactionModel->update($id, $data);
+            $message = 'Transaksi berhasil diperbarui.';
+        } else {
+            $transactionModel->insert($data);
+            $message = 'Transaksi berhasil dicatat.';
+        }
+
+        return redirect()->to('dashboard/keuangan')->with('success', $message);
+    }
+
+    public function deleteFinanceTransaction()
+    {
+        $masjidId = session()->get('masjid_id');
+        $id = $this->request->getPost('id');
+        $transactionModel = new \App\Models\MasjidFinanceTransactionModel();
+
+        $transaction = $transactionModel->where(['id' => $id, 'masjid_id' => $masjidId])->first();
+        if ($transaction) {
+            if (!empty($transaction['attachment'])) {
+                (new Storage())->delete($transaction['attachment']);
+            }
+            $transactionModel->delete($id);
+            return $this->response->setJSON(['status' => 'success', 'message' => 'Transaksi berhasil dihapus.']);
+        }
+
+        return $this->response->setJSON(['status' => 'error', 'message' => 'Transaksi tidak ditemukan.']);
     }
 }

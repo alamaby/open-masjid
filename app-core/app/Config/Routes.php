@@ -47,6 +47,10 @@ $routes->post('dashboard/program/category/save', 'Admin::saveProgramCategory');
 $routes->post('dashboard/program/category/delete', 'Admin::deleteProgramCategory');
 
 $routes->get('dashboard/keuangan', 'Admin::keuangan');
+$routes->post('dashboard/keuangan/save', 'Admin::saveFinanceTransaction');
+$routes->post('dashboard/keuangan/delete', 'Admin::deleteFinanceTransaction');
+$routes->post('dashboard/keuangan/category/save', 'Admin::saveFinanceCategory');
+$routes->post('dashboard/keuangan/category/delete', 'Admin::deleteFinanceCategory');
 
 // Public Profile (Catch-all)
 $routes->get('(:any)/berita', 'Home::newsList/$1');
