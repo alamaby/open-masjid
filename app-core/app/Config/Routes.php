@@ -52,6 +52,12 @@ $routes->post('dashboard/keuangan/delete', 'Admin::deleteFinanceTransaction');
 $routes->post('dashboard/keuangan/category/save', 'Admin::saveFinanceCategory');
 $routes->post('dashboard/keuangan/category/delete', 'Admin::deleteFinanceCategory');
 
+$routes->get('dashboard/warga', 'Admin::warga');
+$routes->get('dashboard/warga/new', 'Admin::createWarga');
+$routes->get('dashboard/warga/edit/(:num)', 'Admin::editWarga/$1');
+$routes->post('dashboard/warga/save', 'Admin::saveWarga');
+$routes->get('dashboard/warga/delete/(:num)', 'Admin::deleteWarga/$1');
+
 // Public Profile (Catch-all)
 $routes->get('(:any)/berita', 'Home::newsList/$1');
 $routes->get('(:any)/berita/(:any)', 'Home::newsDetail/$1/$2');

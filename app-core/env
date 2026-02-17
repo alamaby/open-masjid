@@ -45,7 +45,7 @@
 # database.tests.password = root
 # database.tests.DBDriver = MySQLi
 # database.tests.DBPrefix =
-# database.tests.charset = utf8mb4
+# database.tests.charset = utf8mb4 
 # database.tests.DBCollat = utf8mb4_general_ci
 # database.tests.port = 3306
 

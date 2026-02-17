@@ -844,4 +844,113 @@ class Admin extends BaseController
 
         return $this->response->setJSON(['status' => 'error', 'message' => 'Transaksi tidak ditemukan.']);
     }
+
+    // --- Warga (Mustahik) Management ---
+
+    public function warga(): string
+    {
+        $masjidId = session()->get('masjid_id');
+        $wargaModel = new \App\Models\MasjidWargaModel();
+
+        $search = $this->request->getGet('q');
+        $status = $this->request->getGet('status');
+        $economic = $this->request->getGet('economic');
+
+        $query = $wargaModel->where('masjid_id', $masjidId);
+
+        if ($search) {
+            $query->groupStart()
+                ->like('name', $search)
+                ->orLike('nik', $search)
+                ->orLike('phone', $search)
+                ->groupEnd();
+        }
+
+        if ($status) {
+            $query->where('status', $status);
+        }
+
+        if ($economic) {
+            $query->where('economic_status', $economic);
+        }
+
+        $warga = $query->orderBy('name', 'ASC')->findAll();
+
+        return view('dashboard/warga/index', [
+            'title' => 'Data Warga & Mustahik - Masj.id',
+            'warga' => $warga,
+            'filters' => [
+                'q' => $search,
+                'status' => $status,
+                'economic' => $economic
+            ]
+        ]);
+    }
+
+    public function createWarga()
+    {
+        return view('dashboard/warga/form', [
+            'title' => 'Tambah Data Warga - Masj.id',
+            'warga' => null
+        ]);
+    }
+
+    public function editWarga($id)
+    {
+        $masjidId = session()->get('masjid_id');
+        $wargaModel = new \App\Models\MasjidWargaModel();
+        $warga = $wargaModel->where(['id' => $id, 'masjid_id' => $masjidId])->first();
+
+        if (!$warga) {
+            return redirect()->to('dashboard/warga')->with('error', 'Data warga tidak ditemukan.');
+        }
+
+        return view('dashboard/warga/form', [
+            'title' => 'Edit Data Warga - Masj.id',
+            'warga' => $warga
+        ]);
+    }
+
+    public function saveWarga()
+    {
+        $masjidId = session()->get('masjid_id');
+        $wargaModel = new \App\Models\MasjidWargaModel();
+        $id = $this->request->getPost('id');
+
+        $data = [
+            'masjid_id'       => $masjidId,
+            'name'            => $this->request->getPost('name'),
+            'nik'             => $this->request->getPost('nik'),
+            'kk'              => $this->request->getPost('kk'),
+            'phone'           => $this->request->getPost('phone'),
+            'address'         => $this->request->getPost('address'),
+            'economic_status' => $this->request->getPost('economic_status'),
+            'status'          => $this->request->getPost('status'),
+            'notes'           => $this->request->getPost('notes'),
+        ];
+
+        if ($id) {
+            $wargaModel->update($id, $data);
+            $message = 'Data warga berhasil diperbarui.';
+        } else {
+            $wargaModel->insert($data);
+            $message = 'Data warga berhasil ditambahkan.';
+        }
+
+        return redirect()->to('dashboard/warga')->with('success', $message);
+    }
+
+    public function deleteWarga($id)
+    {
+        $masjidId = session()->get('masjid_id');
+        $wargaModel = new \App\Models\MasjidWargaModel();
+        $warga = $wargaModel->where(['id' => $id, 'masjid_id' => $masjidId])->first();
+
+        if ($warga) {
+            $wargaModel->delete($id);
+            return redirect()->to('dashboard/warga')->with('success', 'Data warga berhasil dihapus.');
+        }
+
+        return redirect()->to('dashboard/warga')->with('error', 'Data warga tidak ditemukan.');
+    }
 }
