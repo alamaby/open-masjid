@@ -118,6 +118,6 @@ class Storage
             return $this->s3Client->getObjectUrl($this->bucket, $path);
         }
 
-        return base_url('public/' . $path);
+        return asset_url('public/' . $path);
     }
 }

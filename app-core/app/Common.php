@@ -13,3 +13,24 @@
  *
  * @see: https://codeigniter.com/user_guide/extending/common.html
  */
+
+if (! function_exists('asset_url')) {
+    /**
+     * Returns the Asset URL.
+     *
+     * @param string $path
+     * @return string
+     */
+    function asset_url(string $path = ''): string
+    {
+        $config = config('App');
+
+        // Check if assetURL is set and not empty
+        if (! empty($config->assetURL)) {
+            return rtrim($config->assetURL, '/') . '/' . ltrim($path, '/');
+        }
+
+        // Fallback to base_url
+        return base_url($path);
+    }
+}
