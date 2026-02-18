@@ -24,16 +24,20 @@ if (! function_exists('asset_url')) {
     function asset_url(string $path = ''): string
     {
         $config = config('App');
+        // Try getting from Config first, then fallback to env() directly
+        // This handles cases where App.php might not have the property yet on the server
+        $assetURL = $config->assetURL ?? env('app.assetURL');
 
-        // Check if assetURL is set and not empty
-        if (! empty($config->assetURL)) {
-            // If assetURL is set (Production/Staging), it usually points directly to public assets.
-            // We strip 'public' from the path to avoid duplication (e.g., 'public/img.png' -> 'img.png').
-            $cleanPath = preg_replace('#^public/#', '', ltrim($path, '/'));
-            return rtrim($config->assetURL, '/') . '/' . $cleanPath;
+        // Clean the path: remove leading slashes and 'public/' prefix
+        $cleanPath = preg_replace('#^public/#', '', ltrim($path, '/'));
+
+        if (! empty($assetURL)) {
+            return rtrim($assetURL, '/') . '/' . $cleanPath;
         }
 
-        // Fallback to base_url
-        return base_url($path);
+        // Fallback: If no assetURL is set (Localhost), we assume assets are in 'public/'
+        // independent of whether valid base_url points to root or public.
+        // We force 'public/' prefix here for consistency.
+        return base_url('public/' . $cleanPath);
     }
 }
