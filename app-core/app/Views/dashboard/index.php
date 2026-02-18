@@ -7,20 +7,19 @@
             <div class="p-3 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl text-emerald-600">
                 <span class="material-symbols-outlined">groups</span>
             </div>
-            <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full">+12 Aktif</span>
+            <!-- <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full">+12 Aktif</span> -->
         </div>
         <p class="text-slate-500 text-sm font-medium">Jamaah Terdata</p>
-        <h3 class="text-3xl font-bold mt-1">1,482</h3>
+        <h3 class="text-3xl font-bold mt-1"><?= number_format($stats['total_warga']) ?></h3>
     </div>
     <div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md transition-shadow">
         <div class="flex justify-between items-start mb-4">
-            <div class="p-3 bg-emerald-50 dark:bg-emerald-900/20 rounded-xl text-emerald-600">
-                <span class="material-symbols-outlined">groups</span>
+            <div class="p-3 bg-purple-50 dark:bg-purple-900/20 rounded-xl text-purple-600">
+                <span class="material-symbols-outlined">inventory_2</span>
             </div>
-            <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full">+12 Aktif</span>
         </div>
-        <p class="text-slate-500 text-sm font-medium">Jamaah Terdata</p>
-        <h3 class="text-3xl font-bold mt-1">1,482</h3>
+        <p class="text-slate-500 text-sm font-medium">Aset Inventaris</p>
+        <h3 class="text-3xl font-bold mt-1"><?= number_format($stats['total_assets']) ?></h3>
     </div>
     
     <?php if (session()->get('role') === 'pengurus'): ?>
@@ -31,7 +30,7 @@
             </div>
         </div>
         <p class="text-slate-500 text-sm font-medium">Dana Amanah Aktif</p>
-        <h3 class="text-3xl font-bold mt-1">Rp 128.5M</h3>
+        <h3 class="text-3xl font-bold mt-1">Rp <?= number_format($stats['finance']['balance'] / 1000000, 1) ?>M</h3>
     </div>
     <?php endif; ?>
 
@@ -42,7 +41,7 @@
             </div>
         </div>
         <p class="text-slate-500 text-sm font-medium">Program Berjalan</p>
-        <h3 class="text-3xl font-bold mt-1">14</h3>
+        <h3 class="text-3xl font-bold mt-1"><?= number_format($stats['active_programs']) ?></h3>
     </div>
 
     <?php if (session()->get('role') === 'pengurus'): ?>
@@ -52,12 +51,12 @@
                 <span class="material-symbols-outlined text-xl">emergency</span>
                 <span class="text-xs font-bold uppercase tracking-wider">Alert Sosial</span>
             </div>
-            <h3 class="text-xl font-bold text-slate-900 dark:text-white">6 Keluarga</h3>
-            <p class="text-xs text-slate-600 dark:text-slate-400 mt-1 italic">Membutuhkan bantuan segera</p>
+            <h3 class="text-xl font-bold text-slate-900 dark:text-white"><?= number_format($stats['social_alert']) ?> Warga</h3>
+            <p class="text-xs text-slate-600 dark:text-slate-400 mt-1 italic">Membutuhkan perhatian khusus (Fakir/Miskin/Yatim)</p>
         </div>
-        <button class="mt-4 w-full py-2 bg-red-600 text-white rounded-lg text-xs font-bold hover:bg-red-700 transition-colors flex items-center justify-center gap-2">
-            Lihat & Tindak Lanjut <span class="material-symbols-outlined text-sm">arrow_forward</span>
-        </button>
+        <a href="<?= base_url('dashboard/warga') ?>" class="mt-4 w-full py-2 bg-red-600 text-white rounded-lg text-xs font-bold hover:bg-red-700 transition-colors flex items-center justify-center gap-2">
+            Lihat Data <span class="material-symbols-outlined text-sm">arrow_forward</span>
+        </a>
     </div>
     <?php else: ?>
     <div class="bg-emerald-50 dark:bg-emerald-950/30 p-6 rounded-xl border-2 border-emerald-200 dark:border-emerald-900/50 shadow-sm flex flex-col justify-between">
@@ -96,60 +95,41 @@
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
-                        <tr>
-                            <td class="px-6 py-5">
-                                <div class="flex flex-col gap-1">
-                                    <span class="font-bold text-sm">Renovasi Menara</span>
-                                    <span class="w-fit px-2 py-0.5 bg-blue-50 text-blue-600 text-[10px] font-bold rounded uppercase">Infrastruktur</span>
-                                </div>
-                            </td>
-                            <td class="px-6 py-5">
-                                <div class="w-48">
-                                    <div class="flex justify-between text-[10px] font-bold mb-1">
-                                        <span>78%</span>
-                                        <span class="text-slate-400">Rp 150jt / 200jt</span>
+                        <?php if (empty($recentPrograms)): ?>
+                            <tr>
+                                <td colspan="4" class="px-6 py-8 text-center text-slate-400 italic">Belum ada program aktif.</td>
+                            </tr>
+                        <?php else: ?>
+                            <?php foreach ($recentPrograms as $prog): ?>
+                            <tr>
+                                <td class="px-6 py-5">
+                                    <div class="flex flex-col gap-1">
+                                        <span class="font-bold text-sm truncate max-w-[200px]"><?= esc($prog['title']) ?></span>
+                                        <span class="w-fit px-2 py-0.5 bg-blue-50 text-blue-600 text-[10px] font-bold rounded uppercase">Program</span>
                                     </div>
-                                    <div class="h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-                                        <div class="bg-primary h-full rounded-full" style="width: 78%"></div>
+                                </td>
+                                <td class="px-6 py-5">
+                                    <div class="w-48">
+                                        <div class="flex justify-between text-[10px] font-bold mb-1">
+                                            <span><?= number_format($prog['percentage'], 0) ?>%</span>
+                                            <span class="text-slate-400">Rp <?= number_format($prog['collected']/1000000, 1) ?>jt / <?= number_format(($prog['target_donation'] ?? 0)/1000000, 1) ?>jt</span>
+                                        </div>
+                                        <div class="h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                            <div class="bg-primary h-full rounded-full" style="width: <?= min(100, $prog['percentage']) ?>%"></div>
+                                        </div>
                                     </div>
-                                </div>
-                            </td>
-                            <td class="px-6 py-5">
-                                <span class="inline-flex items-center gap-1 text-emerald-600 bg-emerald-50 px-2 py-1 rounded text-[10px] font-bold">
-                                    <span class="size-1.5 rounded-full bg-emerald-600"></span> On Track
-                                </span>
-                            </td>
-                            <td class="px-6 py-5 text-right">
-                                <span class="text-xs text-slate-500">2 jam yang lalu</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="px-6 py-5">
-                                <div class="flex flex-col gap-1">
-                                    <span class="font-bold text-sm">Santunan Anak Yatim</span>
-                                    <span class="w-fit px-2 py-0.5 bg-purple-50 text-purple-600 text-[10px] font-bold rounded uppercase">Sosial</span>
-                                </div>
-                            </td>
-                            <td class="px-6 py-5">
-                                <div class="w-48">
-                                    <div class="flex justify-between text-[10px] font-bold mb-1">
-                                        <span>45%</span>
-                                        <span class="text-slate-400">Rp 22jt / 50jt</span>
-                                    </div>
-                                    <div class="h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-                                        <div class="bg-amber-500 h-full rounded-full" style="width: 45%"></div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="px-6 py-5">
-                                <span class="inline-flex items-center gap-1 text-amber-600 bg-amber-50 px-2 py-1 rounded text-[10px] font-bold">
-                                    <span class="size-1.5 rounded-full bg-amber-600"></span> Perlu Update
-                                </span>
-                            </td>
-                            <td class="px-6 py-5 text-right">
-                                <span class="text-xs text-slate-500">Kemarin, 14:00</span>
-                            </td>
-                        </tr>
+                                </td>
+                                <td class="px-6 py-5">
+                                    <span class="inline-flex items-center gap-1 text-emerald-600 bg-emerald-50 px-2 py-1 rounded text-[10px] font-bold">
+                                        <span class="size-1.5 rounded-full bg-emerald-600"></span> Berjalan
+                                    </span>
+                                </td>
+                                <td class="px-6 py-5 text-right">
+                                    <span class="text-xs text-slate-500"><?= $prog['updated_at'] ? date('d M H:i', strtotime($prog['updated_at'])) : '-' ?></span>
+                                </td>
+                            </tr>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
                     </tbody>
                 </table>
             </div>
@@ -162,55 +142,36 @@
                 </h3>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <!-- Activity 1 -->
-                <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden group">
-                    <div class="h-32 bg-slate-200 relative overflow-hidden">
-                        <img alt="Activity" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBNrCVi18zpfFAOGaa579Dvwn6Be1KAzqeT_FFcHDCr03B8CqPnfFuz2qVX-6YPtJdzsBr4jXReo1vDd9tCetJ3orRdYZm1M1FZJ2ZYMXqeZYC4Akd4aoAQx4iOdJlsHTGwPUgwkSaSeeOGNUUJADPlBNGsqyLyGjrEtNBfyw5VsgXDAydysgOuZjz9ESVImpWKXyAFOipHJxNf8oGbCP8tBZKGuIUO0nt1UwIk0dmL_M5Ti9fygSXyOBAZVNCZahzEgXMYpOw5jWzk"/>
-                        <span class="absolute top-2 right-2 px-2 py-1 bg-white/90 text-primary text-[10px] font-bold rounded shadow-sm">Dakwah</span>
+                <?php if (empty($recentNews)): ?>
+                    <div class="col-span-3 p-8 text-center text-slate-400 italic bg-slate-50 rounded-xl">Belum ada berita dipublikasikan.</div>
+                <?php else: ?>
+                    <?php 
+                    $storage = new \App\Libraries\Storage();
+                    foreach ($recentNews as $news): 
+                        $thumb = !empty($news['thumbnail']) ? $storage->url($news['thumbnail']) : asset_url('logo.png');
+                    ?>
+                    <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden group">
+                        <div class="h-32 bg-slate-200 relative overflow-hidden">
+                            <img alt="<?= esc($news['title']) ?>" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="<?= $thumb ?>"/>
+                            <span class="absolute top-2 right-2 px-2 py-1 bg-white/90 text-primary text-[10px] font-bold rounded shadow-sm"><?= esc($news['category_name'] ?? 'Umum') ?></span>
+                        </div>
+                        <div class="p-4">
+                            <p class="text-[10px] text-slate-400 font-bold mb-1"><?= date('d M Y', strtotime($news['created_at'])) ?></p>
+                            <h4 class="text-sm font-bold line-clamp-2 mb-3"><?= esc($news['title']) ?></h4>
+                            <a class="text-primary text-[11px] font-bold flex items-center gap-1 hover:underline" href="<?= base_url('dashboard/berita/edit/' . $news['id']) ?>">
+                                <span class="material-symbols-outlined text-sm">edit</span> Edit Artikel
+                            </a>
+                        </div>
                     </div>
-                    <div class="p-4">
-                        <p class="text-[10px] text-slate-400 font-bold mb-1">12 OKT 2023</p>
-                        <h4 class="text-sm font-bold line-clamp-2 mb-3">Kajian Spesial: Manajemen Keuangan Keluarga Islami</h4>
-                        <a class="text-primary text-[11px] font-bold flex items-center gap-1 hover:underline" href="#">
-                            <span class="material-symbols-outlined text-sm">link</span> Dokumentasi
-                        </a>
-                    </div>
-                </div>
-                <!-- Activity 2 -->
-                <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden group">
-                    <div class="h-32 bg-slate-200 relative overflow-hidden">
-                        <img alt="Activity" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuARGYts7CaDoe3vyVUsuzfQ2xeCNG4eJaJvJF-jk0O9n_ymLfImsiL8wVSEqaXzjHluBNj1BZrSJVWnk7GPzGCEG9vMC6eH2qLZIkjywOkRlhut72L6c2LviAFwjc3E90DGrlRKVjodKFnsLlQjLI9meeuTRNHh4CR5nA8mebEQxrPGwQIO-6gFPX7_5u_Kcwu3WZ27C38pc5NyoVCQu05eHDd6_26bPrI4AcJtqJP9L44UJyyA5ZMuQUblfZkFN-rvUXdbWKVKZ72J"/>
-                        <span class="absolute top-2 right-2 px-2 py-1 bg-white/90 text-primary text-[10px] font-bold rounded shadow-sm">Sosial</span>
-                    </div>
-                    <div class="p-4">
-                        <p class="text-[10px] text-slate-400 font-bold mb-1">10 OKT 2023</p>
-                        <h4 class="text-sm font-bold line-clamp-2 mb-3">Penyaluran Beras Jumat Barokah Tahap III</h4>
-                        <a class="text-primary text-[11px] font-bold flex items-center gap-1 hover:underline" href="#">
-                            <span class="material-symbols-outlined text-sm">link</span> Dokumentasi
-                        </a>
-                    </div>
-                </div>
-                <!-- Activity 3 -->
-                <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden group">
-                    <div class="h-32 bg-slate-200 relative overflow-hidden">
-                        <img alt="Activity" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB5JEjMZM8itE_3-59jItq3PmRtYsHmNmek3Lb9CgGj3oCKgrrvkuNWo7CHWh8o7QJ0aUOtvwm4QfCpKzRSyEx4VYSJz-C-dYENTBvM6w_zCx-VL7ubs3jfWZc84XGdXHzZyIZcu_CoUT9u__1LZc3cE72uDRrFvbbzYa7g7_P9bv7hDBwURreUYezs_28--G3awCR5VCNV4b34VYubNtxgs1AWX4YBG7v-brwDmf5CAIdUS1zkJgwsLqbKLBv8_9jSWCS0vFicdJZK"/>
-                        <span class="absolute top-2 right-2 px-2 py-1 bg-white/90 text-primary text-[10px] font-bold rounded shadow-sm">Rutin</span>
-                    </div>
-                    <div class="p-4">
-                        <p class="text-[10px] text-slate-400 font-bold mb-1">08 OKT 2023</p>
-                        <h4 class="text-sm font-bold line-clamp-2 mb-3">Kerja Bakti Persiapan Maulid Nabi 1445H</h4>
-                        <a class="text-primary text-[11px] font-bold flex items-center gap-1 hover:underline" href="#">
-                            <span class="material-symbols-outlined text-sm">link</span> Dokumentasi
-                        </a>
-                    </div>
-                </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
             </div>
         </div>
     </div>
     <div class="space-y-8">
         <div class="bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
             <div class="flex items-center justify-between mb-6">
-                <span class="font-bold text-sm">Oktober 2023</span>
+                <span class="font-bold text-sm"><?= date('F Y') ?></span>
                 <div class="flex gap-2">
                     <button class="size-7 flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors"><span class="material-symbols-outlined text-base">chevron_left</span></button>
                     <button class="size-7 flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors"><span class="material-symbols-outlined text-base">chevron_right</span></button>
@@ -229,20 +190,19 @@
                 <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
                     <span class="size-1.5 bg-primary rounded-full"></span> Mendatang
                 </p>
-                <div class="flex gap-3 p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
-                    <div class="w-1 bg-primary rounded-full shrink-0"></div>
-                    <div>
-                        <p class="text-sm font-bold">Kajian Maghrib</p>
-                        <p class="text-[11px] text-slate-500">Hari ini, 18:30 WIB</p>
+                <?php if (empty($upcomingSchedules)): ?>
+                    <p class="text-xs text-slate-400 italic">Belum ada jadwal mendatang.</p>
+                <?php else: ?>
+                    <?php foreach ($upcomingSchedules as $sched): ?>
+                    <div class="flex gap-3 p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
+                        <div class="w-1 bg-primary rounded-full shrink-0"></div>
+                        <div>
+                            <p class="text-sm font-bold"><?= ucfirst($sched['prayer_type']) ?> - <?= esc($sched['imam_name'] ?: 'Belum ditentukan') ?></p>
+                            <p class="text-[11px] text-slate-500"><?= date('D, d M Y', strtotime($sched['date'])) ?></p>
+                        </div>
                     </div>
-                </div>
-                <div class="flex gap-3 p-3 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
-                    <div class="w-1 bg-blue-400 rounded-full shrink-0"></div>
-                    <div>
-                        <p class="text-sm font-bold">Rapat Koordinasi Zakat</p>
-                        <p class="text-[11px] text-slate-500">Besok, 09:00 WIB</p>
-                    </div>
-                </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
             </div>
         </div>
         <div class="bg-primary/5 dark:bg-primary/10 border border-primary/20 p-6 rounded-2xl">
@@ -270,15 +230,15 @@
             <div class="space-y-3">
                 <div class="flex justify-between items-center text-xs">
                     <span class="text-slate-500">Dana Masuk</span>
-                    <span class="font-bold text-emerald-600">+ Rp 45.2M</span>
+                    <span class="font-bold text-emerald-600">+ Rp <?= number_format($stats['finance']['total_income'], 0, ',', '.') ?></span>
                 </div>
                 <div class="flex justify-between items-center text-xs">
                     <span class="text-slate-500">Dana Tersalurkan</span>
-                    <span class="font-bold text-red-500">- Rp 12.8M</span>
+                    <span class="font-bold text-red-500">- Rp <?= number_format($stats['finance']['total_expense'], 0, ',', '.') ?></span>
                 </div>
                 <div class="pt-3 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center">
                     <span class="text-sm font-bold">Saldo Amanah</span>
-                    <span class="text-sm font-bold text-primary">Rp 32.4M</span>
+                    <span class="text-sm font-bold text-primary">Rp <?= number_format($stats['finance']['balance'], 0, ',', '.') ?></span>
                 </div>
             </div>
             <div class="mt-4 p-2 bg-slate-50 dark:bg-slate-800 rounded flex items-start gap-2">

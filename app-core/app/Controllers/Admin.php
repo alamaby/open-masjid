@@ -18,8 +18,90 @@ class Admin extends BaseController
     public function index(): string
     {
         $name = session()->get('masjid_name') ?? session()->get('user_name') ?? 'User';
+        $masjidId = session()->get('masjid_id');
+
+        // Models
+        $wargaModel = new \App\Models\MasjidWargaModel();
+        $inventoryModel = new \App\Models\MasjidInventoryModel();
+        $financeModel = new \App\Models\MasjidFinanceTransactionModel();
+        $programModel = new \App\Models\MasjidProgramModel();
+        $newsModel = new \App\Models\MasjidNewsModel();
+        $scheduleModel = new \App\Models\MasjidScheduleModel();
+
+        // 1. Stats
+        $totalWarga = $wargaModel->where('masjid_id', $masjidId)->whereIn('status', ['active', 'pindah', 'meninggal'])->countAllResults();
+        $totalAssetItems = $inventoryModel->where('masjid_id', $masjidId)->countAllResults();
+        
+        // Finance Summary
+        $financeSummary = $financeModel->getSummary($masjidId);
+        
+        // Active Programs Count
+        $activeProgramsCount = $programModel->where('masjid_id', $masjidId)
+            ->where('date_end >=', date('Y-m-d'))
+            ->countAllResults();
+
+        // Social Alert (Warga Kurang Mampu)
+        $socialAlertCount = $wargaModel->where('masjid_id', $masjidId)
+            ->whereIn('economic_status', ['fakir', 'miskin', 'yatim', 'kurang_mampu'])
+            ->countAllResults();
+
+        // 2. Lists
+        // Recent Programs with Funding Progress
+        $recentPrograms = $programModel->where('masjid_id', $masjidId)
+            ->where('status', 'published')
+            ->orderBy('created_at', 'DESC')
+            ->findAll(5);
+        
+        // Calculate progress for each program
+        foreach ($recentPrograms as &$prog) {
+            $prog['collected'] = 0;
+            if (!empty($prog['target_donation']) && $prog['target_donation'] > 0) {
+                $prog['collected'] = $financeModel->where('masjid_id', $masjidId)
+                    ->where('program_id', $prog['id'])
+                    ->where('type', 'pemasukan')
+                    ->selectSum('amount')
+                    ->first()['amount'] ?? 0;
+                $prog['percentage'] = ($prog['collected'] / $prog['target_donation']) * 100;
+            } else {
+                $prog['percentage'] = 0;
+            }
+        }
+
+        // Recent News
+        $recentNews = $newsModel->select('masjid_news.*, masjid_news_categories.name as category_name')
+            ->join('masjid_news_categories', 'masjid_news_categories.id = masjid_news.category_id', 'left')
+            ->where('masjid_news.masjid_id', $masjidId)
+            ->where('masjid_news.status', 'published')
+            ->orderBy('masjid_news.created_at', 'DESC')
+            ->findAll(3);
+
+        // Upcoming Schedules
+        $upcomingSchedules = $scheduleModel->where('masjid_id', $masjidId)
+            ->where('date >=', date('Y-m-d'))
+            ->orderBy('date', 'ASC')
+            ->findAll(3);
+
+        // Todo List (Mocked for now based on logic)
+        $todoList = [];
+        // Check financial report for current month
+        $currentMonth = date('Y-m');
+        $hasTransaction = $financeModel->where('masjid_id', $masjidId)->like('date', $currentMonth)->countAllResults();
+        if ($hasTransaction > 0) {
+            // Placeholder logic: In real app, check if 'report_generated' flag exists
+        }
+
         $data = [
-            'title' => 'Dashboard Utama - ' . $name
+            'title' => 'Dashboard Utama - ' . $name,
+            'stats' => [
+                'total_warga' => $totalWarga,
+                'total_assets' => $totalAssetItems,
+                'finance' => $financeSummary,
+                'active_programs' => $activeProgramsCount,
+                'social_alert' => $socialAlertCount
+            ],
+            'recentPrograms' => $recentPrograms,
+            'recentNews' => $recentNews,
+            'upcomingSchedules' => $upcomingSchedules
         ];
         return view('dashboard/index', $data);
     }
