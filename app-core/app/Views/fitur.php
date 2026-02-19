@@ -5,6 +5,31 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
+
+<?php
+// Helper to format numbers compactly (e.g., 1.5k, 1M)
+if (!function_exists('formatCompact')) {
+    function formatCompact($n) {
+        if ($n < 1000) return $n;
+        $suffix = '';
+        if ($n < 1000000) {
+            $n = $n / 1000;
+            $suffix = 'rb+'; // Ribu
+        } else if ($n < 1000000000) {
+            $n = $n / 1000000;
+            $suffix = 'Jt+'; // Juta
+        } else {
+            $n = $n / 1000000000;
+            $suffix = 'M+'; // Miliar
+        }
+        return round($n, 1) . $suffix;
+    }
+}
+
+// Ensure stats exist
+$stats = $stats ?? ['masjid' => 0, 'donasi' => 0, 'jamaah' => 0, 'provinsi' => 0, 'program_aktif' => 0];
+?>
+
 <!-- Hero Section -->
 <section class="max-w-[1200px] mx-auto px-6 py-16 md:py-24">
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -28,7 +53,7 @@
                 </button>
                 <div class="flex items-center gap-4 px-6 border-l-2 border-gray-200 dark:border-gray-700">
                     <div>
-                        <p class="text-2xl font-bold">500+</p>
+                        <p class="text-2xl font-bold"><?= formatCompact($stats['masjid']) ?></p>
                         <p class="text-xs text-gray-500 uppercase font-semibold">Masjid Aktif</p>
                     </div>
                 </div>
@@ -42,7 +67,7 @@
                     <div class="flex justify-between items-center">
                         <div class="flex flex-col">
                             <span class="text-xs font-bold text-gray-500 uppercase mb-1">Total Donasi Terkumpul</span>
-                            <span class="text-2xl font-black text-primary">Rp 10.450.000.000+</span>
+                            <span class="text-2xl font-black text-primary">Rp <?= formatCompact($stats['donasi']) ?></span>
                         </div>
                         <div class="h-12 w-12 rounded-full bg-primary/20 flex items-center justify-center text-primary">
                             <span class="material-symbols-outlined">payments</span>
@@ -185,15 +210,15 @@
     <div class="max-w-[1200px] mx-auto px-6">
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
             <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl border border-[#dce4e1] dark:border-gray-700 shadow-sm text-center">
-                <p class="text-primary text-4xl font-black mb-2 tracking-tight">50.000+</p>
+                <p class="text-primary text-4xl font-black mb-2 tracking-tight"><?= formatCompact($stats['jamaah']) ?></p>
                 <p class="text-gray-500 font-semibold text-sm uppercase">Jamaah Aktif</p>
             </div>
             <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl border border-[#dce4e1] dark:border-gray-700 shadow-sm text-center">
-                <p class="text-primary text-4xl font-black mb-2 tracking-tight">34</p>
+                <p class="text-primary text-4xl font-black mb-2 tracking-tight"><?= formatCompact($stats['provinsi']) ?></p>
                 <p class="text-gray-500 font-semibold text-sm uppercase">Provinsi Terjangkau</p>
             </div>
             <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl border border-[#dce4e1] dark:border-gray-700 shadow-sm text-center">
-                <p class="text-primary text-4xl font-black mb-2 tracking-tight">1.2K+</p>
+                <p class="text-primary text-4xl font-black mb-2 tracking-tight"><?= formatCompact($stats['program_aktif']) ?></p>
                 <p class="text-gray-500 font-semibold text-sm uppercase">Program Aktif</p>
             </div>
         </div>

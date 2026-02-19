@@ -33,7 +33,37 @@ class Home extends BaseController
 
     public function fitur(): string
     {
-        return view('fitur', ['title' => 'Fitur Unggulan - Masj.id']);
+        $masjidModel = new \App\Models\MasjidModel();
+        $wargaModel = new \App\Models\MasjidWargaModel();
+        $financeModel = new \App\Models\MasjidFinanceTransactionModel();
+        $programModel = new \App\Models\MasjidProgramModel();
+
+        // 1. Total Masjid
+        $totalMasjid = $masjidModel->countAll();
+
+        // 2. Total Donasi (Sum of all 'pemasukan')
+        $totalDonasiResult = $financeModel->selectSum('amount')->where('type', 'pemasukan')->first();
+        $totalDonasi = $totalDonasiResult['amount'] ?? 0;
+
+        // 3. Jamaah Aktif
+        $totalJamaah = $wargaModel->countAll();
+
+        // 4. Provinsi Terjangkau (Unique provinces)
+        $totalProvinsi = $masjidModel->select('provinsi')->distinct()->countAllResults();
+
+        // 5. Program Aktif (Published programs)
+        $totalProgramAktif = $programModel->where('status', 'published')->countAllResults();
+
+        return view('fitur', [
+            'title' => 'Fitur Lengkap Platform Masj.id',
+            'stats' => [
+                'masjid'        => $totalMasjid,
+                'donasi'        => $totalDonasi,
+                'jamaah'        => $totalJamaah,
+                'provinsi'      => $totalProvinsi,
+                'program_aktif' => $totalProgramAktif
+            ]
+        ]);
     }
 
     public function kebaikan(): string
