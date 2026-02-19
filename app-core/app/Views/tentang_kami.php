@@ -88,6 +88,7 @@
     </div>
 </section>
 
+<?php /*
 <section class="bg-primary/5 dark:bg-[#061510]/50 py-24 px-6 border-y border-primary/10">
     <div class="max-w-[1000px] mx-auto">
         <div class="text-center mb-12">
@@ -134,6 +135,34 @@
                     <p class="text-center text-[11px] text-gray-400">Setiap rupiah yang masuk dicatat dan dilaporkan secara publik.</p>
                 </div>
             </div>
+        </div>
+    </div>
+</section>
+*/ ?>
+
+<section class="py-24 px-6 border-t border-[#dbe6e1] dark:border-[#1e3a2f]">
+    <div class="max-w-[800px] mx-auto text-center">
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold uppercase tracking-widest mb-6">
+            Kontak & Kolaborasi
+        </div>
+        <h2 class="text-3xl font-black mb-10 text-gray-900 dark:text-white">Ingin Berdiskusi Lebih Lanjut?</h2>
+        
+        <div class="grid md:grid-cols-2 gap-6">
+            <a href="https://instagram.com/webmasjid" target="_blank" class="group bg-white dark:bg-[#1a2e25] p-8 rounded-2xl border border-[#dbe6e1] dark:border-[#1e3a2f] hover:border-pink-500 hover:shadow-xl hover:shadow-pink-500/10 transition-all">
+                <div class="flex items-center justify-center size-14 mx-auto bg-pink-50 dark:bg-pink-900/20 text-pink-600 rounded-full mb-4 group-hover:scale-110 transition-transform">
+                     <span class="material-symbols-outlined text-2xl">photo_camera</span>
+                </div>
+                <h3 class="font-bold text-lg mb-1 text-gray-900 dark:text-white">Instagram</h3>
+                <p class="text-gray-500 dark:text-gray-400 text-sm font-medium">@webmasjid</p>
+            </a>
+            
+            <a href="https://t.me/novrand" target="_blank" class="group bg-white dark:bg-[#1a2e25] p-8 rounded-2xl border border-[#dbe6e1] dark:border-[#1e3a2f] hover:border-blue-500 hover:shadow-xl hover:shadow-blue-500/10 transition-all">
+                <div class="flex items-center justify-center size-14 mx-auto bg-blue-50 dark:bg-blue-900/20 text-blue-600 rounded-full mb-4 group-hover:scale-110 transition-transform">
+                     <span class="material-symbols-outlined text-2xl">send</span>
+                </div>
+                <h3 class="font-bold text-lg mb-1 text-gray-900 dark:text-white">Telegram</h3>
+                <p class="text-gray-500 dark:text-gray-400 text-sm font-medium">@novrand</p>
+            </a>
         </div>
     </div>
 </section>
