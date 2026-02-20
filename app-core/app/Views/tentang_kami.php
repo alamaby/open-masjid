@@ -199,14 +199,44 @@
                 Kemitraan & Donatur
             </a>
         </div>
-        <div class="flex flex-col items-center gap-4">
-            <p class="text-[#3d5a4d] dark:text-gray-400 font-bold tracking-wide italic">"Didukung Yayasan Generasi Sahabat Muslim. Amanah untuk kebaikan bersama."</p>
-            <div class="flex items-center gap-6 mt-6 grayscale opacity-50">
-                 <a href="https://instagram.com/webmasjid" target="_blank" class="hover:text-primary transition-colors"><span class="material-symbols-outlined">photo_camera</span></a>
-                 <a href="https://t.me/novrand" target="_blank" class="hover:text-primary transition-colors"><span class="material-symbols-outlined">send</span></a>
-            </div>
+<!-- Contact Section -->
+<section class="py-24 px-6 border-t border-[#dce4e1] dark:border-gray-800">
+    <div class="max-w-[1000px] mx-auto text-center">
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-widest mb-6">
+            Kontak & Kolaborasi
+        </div>
+        <h2 class="text-3xl font-black mb-12 text-gray-900 dark:text-white">Mari Berdiskusi untuk Kebaikan</h2>
+        
+        <div class="grid md:grid-cols-3 gap-6">
+            <a href="https://instagram.com/webmasjid" target="_blank" class="group bg-background-light dark:bg-[#1a2e25] p-8 rounded-[2rem] border border-[#dce4e1] dark:border-[#1e3a2f] hover:border-primary transition-all">
+                <div class="size-14 mx-auto bg-primary/10 text-primary rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                    <span class="material-symbols-outlined">photo_camera</span>
+                </div>
+                <h3 class="font-bold text-gray-900 dark:text-white">Instagram</h3>
+                <p class="text-xs text-gray-500 mt-1">@webmasjid</p>
+            </a>
+            
+            <a href="https://www.linkedin.com/company/portal-masjid/" target="_blank" class="group bg-background-light dark:bg-[#1a2e25] p-8 rounded-[2rem] border border-[#dce4e1] dark:border-[#1e3a2f] hover:border-primary transition-all">
+                <div class="size-14 mx-auto bg-primary/10 text-primary rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                    <span class="material-symbols-outlined">work</span>
+                </div>
+                <h3 class="font-bold text-gray-900 dark:text-white">LinkedIn</h3>
+                <p class="text-xs text-gray-500 mt-1">Masj.id (Portal Masjid)</p>
+            </a>
+            
+            <a href="https://t.me/novrand" target="_blank" class="group bg-background-light dark:bg-[#1a2e25] p-8 rounded-[2rem] border border-[#dce4e1] dark:border-[#1e3a2f] hover:border-primary transition-all">
+                <div class="size-14 mx-auto bg-primary/10 text-primary rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                    <span class="material-symbols-outlined">send</span>
+                </div>
+                <h3 class="font-bold text-gray-900 dark:text-white">Telegram</h3>
+                <p class="text-xs text-gray-500 mt-1">@novrand</p>
+            </a>
         </div>
     </div>
+</section>
+
+<section class="py-12 bg-white dark:bg-[#111815] text-center">
+    <p class="text-[#3d5a4d] dark:text-gray-400 font-bold tracking-wide italic text-sm">"Didukung Yayasan Generasi Sahabat Muslim. Amanah untuk kebaikan bersama."</p>
 </section>
 
 <?= $this->endSection() ?>
