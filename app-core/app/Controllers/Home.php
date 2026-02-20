@@ -68,7 +68,33 @@ class Home extends BaseController
 
     public function kebaikan(): string
     {
-        return view('program_kebaikan', ['title' => 'Statistik Dampak & Program - Masj.id']);
+        $masjidModel = new \App\Models\MasjidModel();
+        $wargaModel = new \App\Models\MasjidWargaModel();
+        $financeModel = new \App\Models\MasjidFinanceTransactionModel();
+        $programModel = new \App\Models\MasjidProgramModel();
+
+        // 1. Total Masjid
+        $totalMasjid = $masjidModel->countAll();
+
+        // 2. Total Dana (managed funds)
+        $totalDanaResult = $financeModel->selectSum('amount')->where('type', 'pemasukan')->first();
+        $totalDana = $totalDanaResult['amount'] ?? 0;
+
+        // 3. Beneficiaries (Jamaah/Warga)
+        $totalJamaah = $wargaModel->countAll();
+
+        // 4. Active Programs
+        $totalProgram = $programModel->where('status', 'published')->countAllResults();
+
+        return view('program_kebaikan', [
+            'title' => 'Statistik Dampak & Program - Masj.id',
+            'stats' => [
+                'masjid' => $totalMasjid,
+                'dana'   => $totalDana,
+                'jamaah' => $totalJamaah,
+                'program'=> $totalProgram
+            ]
+        ]);
     }
 
     public function tentang(): string

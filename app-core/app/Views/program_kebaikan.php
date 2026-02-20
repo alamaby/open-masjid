@@ -2,6 +2,30 @@
 
 <?= $this->section('content') ?>
 
+<?php
+// Helper to format numbers compactly (e.g., 1.5k, 1M)
+if (!function_exists('formatCompact')) {
+    function formatCompact($n) {
+        if ($n < 1000) return $n;
+        $suffix = '';
+        if ($n < 1000000) {
+            $n = $n / 1000;
+            $suffix = 'rb+'; // Ribu
+        } else if ($n < 1000000000) {
+            $n = $n / 1000000;
+            $suffix = 'Jt+'; // Juta
+        } else {
+            $n = $n / 1000000000;
+            $suffix = 'M+'; // Miliar
+        }
+        return round($n, 1) . $suffix;
+    }
+}
+
+// Ensure stats exist
+$stats = $stats ?? ['masjid' => 0, 'dana' => 0, 'jamaah' => 0, 'program' => 0];
+?>
+
 <!-- Hero Section -->
 <section class="relative pt-24 pb-16 px-6 bg-white dark:bg-background-dark overflow-hidden">
     <div class="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full translate-x-1/3 -translate-y-1/3 blur-3xl"></div>
@@ -20,6 +44,30 @@
             <a href="#program" class="px-8 py-4 bg-primary text-white rounded-xl font-black shadow-xl shadow-primary/20 hover:scale-105 transition-all">
                 Mulai Bergerak
             </a>
+        </div>
+    </div>
+</section>
+
+<!-- Impact Stats Section -->
+<section class="py-12 bg-white dark:bg-background-dark border-y border-[#dce4e1] dark:border-gray-800">
+    <div class="max-w-[1200px] mx-auto px-6">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+            <div class="text-center">
+                <div class="text-3xl md:text-4xl font-black text-primary mb-1"><?= formatCompact($stats['masjid']) ?></div>
+                <div class="text-xs font-bold text-gray-500 uppercase tracking-widest">Masjid Aktif</div>
+            </div>
+            <div class="text-center">
+                <div class="text-3xl md:text-4xl font-black text-primary mb-1">Rp <?= formatCompact($stats['dana']) ?></div>
+                <div class="text-xs font-bold text-gray-500 uppercase tracking-widest">Dana Terkelola</div>
+            </div>
+            <div class="text-center">
+                <div class="text-3xl md:text-4xl font-black text-primary mb-1"><?= formatCompact($stats['jamaah']) ?></div>
+                <div class="text-xs font-bold text-gray-500 uppercase tracking-widest">Penerima Manfaat</div>
+            </div>
+            <div class="text-center">
+                <div class="text-3xl md:text-4xl font-black text-primary mb-1"><?= formatCompact($stats['program']) ?></div>
+                <div class="text-xs font-bold text-gray-500 uppercase tracking-widest">Kegiatan Berjalan</div>
+            </div>
         </div>
     </div>
 </section>
