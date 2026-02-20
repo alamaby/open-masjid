@@ -9,10 +9,10 @@
             <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider w-fit">
                 Alat Bantu Perubahan
             </div>
-            <h1 class="text-4xl md:text-6xl font-black tracking-tight leading-[1.1] text-gray-900 dark:text-white">
+            <h1 class="text-3xl md:text-5xl font-black tracking-tight leading-[1.1] text-gray-900 dark:text-white">
                 Alat Khidmah untuk <br/> <span class="text-primary italic">Amanah yang Lebih Besar</span>
             </h1>
-            <p class="text-xl text-[#3d5a4d] dark:text-gray-400 max-w-lg leading-relaxed">
+            <p class="text-lg text-[#3d5a4d] dark:text-gray-400 max-w-lg leading-relaxed">
                 Kami menyediakan instrumen yang memudahkan pengurus masjid untuk mengelola kepedulian masyarakat dengan tertata dan jujur.
             </p>
         </div>
@@ -27,7 +27,7 @@
 <!-- Introduction Section -->
 <section class="py-24 px-6 bg-background-light dark:bg-background-dark/30">
     <div class="max-w-[800px] mx-auto text-center">
-        <h2 class="text-2xl md:text-3xl text-gray-800 dark:text-gray-200 leading-relaxed font-bold italic">
+        <h2 class="text-lg md:text-2xl text-gray-800 dark:text-gray-200 leading-relaxed font-bold italic">
             "Masjid butuh alat yang amanah. Karena tanpa pengelolaan yang baik, niat mulia seringkali tidak sampai ke tangan yang paling membutuhkan."
         </h2>
     </div>
@@ -124,7 +124,7 @@
 <!-- Closing Section -->
 <section class="py-24 px-6 bg-background-light dark:bg-background-dark/30">
     <div class="max-w-[800px] mx-auto text-center">
-        <p class="text-xl text-[#3d5a4d] dark:text-gray-400 leading-relaxed font-bold">
+        <p class="text-lg text-[#3d5a4d] dark:text-gray-400 leading-relaxed font-bold">
             "Teknologi bagi kami hanyalah sarana. Tujuan utamanya tetap satu: kemudahan bagi masjid dalam melayani umat."
         </p>
         <div class="mt-12">

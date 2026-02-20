@@ -8,10 +8,10 @@
         <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold uppercase tracking-wider mb-8">
             Jejak Nyata Kemanusiaan
         </div>
-        <h1 class="text-4xl md:text-7xl font-black tracking-tight mb-8 leading-tight text-gray-900 dark:text-white">
+        <h1 class="text-4xl md:text-5xl font-black tracking-tight mb-8 leading-tight text-gray-900 dark:text-white">
             Menapak Jejak Perubahan <br/> <span class="text-primary italic">di Setiap Sudut Gang</span>
         </h1>
-        <p class="text-xl text-[#3d5a4d] dark:text-gray-400 max-w-[800px] mx-auto mb-10 leading-relaxed">
+        <p class="text-lg text-[#3d5a4d] dark:text-gray-400 max-w-[800px] mx-auto mb-10 leading-relaxed">
             Lihat bagaimana satu niat baik dari masjid berubah menjadi gelombang harapan yang nyata bagi tetangga kita.
         </p>
     </div>
@@ -21,7 +21,7 @@
 <section class="py-24 px-6 bg-background-light dark:bg-background-dark/30">
     <div class="max-w-[800px] mx-auto text-center">
         <h2 class="text-primary font-bold uppercase tracking-widest text-sm mb-6">Kondisi Nyata di Sekitar Kita</h2>
-        <p class="text-xl text-gray-800 dark:text-gray-200 leading-relaxed italic font-medium">
+        <p class="text-lg text-gray-800 dark:text-gray-200 leading-relaxed italic font-medium">
             "Di sekitar kita, masih banyak lansia yang berjuang sendirian dan anak-anak yatim yang mimpinya nyaris padam. Kondisi ini adalah alasan mengapa gerakan masjid harus terus diperkuat."
         </p>
     </div>
@@ -102,7 +102,7 @@
         <div class="inline-flex items-center justify-center size-20 rounded-full bg-primary/10 text-primary mb-12">
             <span class="material-symbols-outlined text-4xl">auto_stories</span>
         </div>
-        <p class="text-2xl md:text-3xl text-gray-800 dark:text-gray-200 leading-relaxed font-bold italic mb-6">
+        <p class="text-lg md:text-xl text-gray-800 dark:text-gray-200 leading-relaxed font-bold italic mb-6">
             "Dulu, masjid di kampung kami hanya terbuka saat waktu shalat. Sekarang, masjid adalah tempat pertama yang kami tuju saat ada warga yang sakit atau anak yang putus sekolah. Perubahan tata kelola ini benar-benar menghidupkan kembali harapan kami."
         </p>
     </div>
@@ -111,7 +111,7 @@
 <!-- Final CTA Section -->
 <section class="py-24 px-6 bg-background-light dark:bg-background-dark/30">
     <div class="max-w-[1000px] mx-auto text-center">
-        <h2 class="text-3xl md:text-5xl font-black mb-12 text-[#111815] dark:text-white leading-tight">
+        <h2 class="text-2xl md:text-4xl font-black mb-10 text-[#111815] dark:text-white leading-tight">
             Mari Perluas Jejak <br/> <span class="text-primary italic">Kebaikan Ini Bersama</span>
         </h2>
         <div class="flex flex-wrap justify-center gap-4">

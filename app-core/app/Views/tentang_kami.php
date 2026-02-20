@@ -8,10 +8,10 @@
         <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold uppercase tracking-wider mb-8">
             Pondasi Gerakan Kebaikan
         </div>
-        <h1 class="text-4xl md:text-7xl font-black tracking-tight mb-8 leading-tight text-gray-900 dark:text-white">
+        <h1 class="text-4xl md:text-5xl font-black tracking-tight mb-8 leading-tight text-gray-900 dark:text-white">
             Perjalanan Khidmah untuk <br/> <span class="text-primary italic">Kemandirian Umat</span>
         </h1>
-        <p class="text-xl text-[#3d5a4d] dark:text-gray-400 max-w-[800px] mx-auto mb-10 leading-relaxed">
+        <p class="text-lg text-[#3d5a4d] dark:text-gray-400 max-w-[800px] mx-auto mb-10 leading-relaxed">
             Mengenal lebih dekat niat dan landasan di balik gerakan Masj.id.
         </p>
     </div>
@@ -87,7 +87,7 @@
              <span class="material-symbols-outlined text-[80px]">shield_with_heart</span>
         </div>
         <div>
-            <h2 class="text-3xl font-black mb-6 text-gray-900 dark:text-white leading-tight">Dukungan Yayasan Generasi Sahabat Muslim</h2>
+            <h2 class="text-2xl font-black mb-6 text-gray-900 dark:text-white leading-tight text-center md:text-left">Dukungan Yayasan Generasi Sahabat Muslim</h2>
             <p class="text-lg text-[#3d5a4d] dark:text-gray-400 leading-relaxed">
                 Gerakan ini sepenuhnya didukung oleh <strong>Yayasan Generasi Sahabat Muslim</strong>. Yayasan ini menjadi pondasi moral dan hukum yang menjamin bahwa setiap gerak Masj.id akan selalu selaras dengan kepentingan pemberdayaan umat dan terjaga keberlanjutannya secara profesional.
             </p>
@@ -98,8 +98,8 @@
 <!-- Ecosystem Section -->
 <section class="py-24 px-6 bg-white dark:bg-background-dark text-center">
     <div class="max-w-[1000px] mx-auto">
-        <h2 class="text-3xl font-black mb-16 text-gray-900 dark:text-white">Ekosistem Pemberdayaan</h2>
-        <p class="text-xl text-[#3d5a4d] dark:text-gray-400 leading-relaxed mb-12">
+        <h2 class="text-2xl font-black mb-12 text-gray-900 dark:text-white">Ekosistem Pemberdayaan</h2>
+        <p class="text-lg text-[#3d5a4d] dark:text-gray-400 leading-relaxed mb-10">
             Kami bekerja dengan menghubungkan ketulusan <strong>Relawan</strong>, kesetiaan <strong>Jamaah</strong>, dan kemurahan hati <strong>Donatur</strong> dalam satu wadah yang berpusat di institusi <strong>Masjid</strong>.
         </p>
         <div class="flex flex-wrap justify-center gap-6">
@@ -114,7 +114,7 @@
 <!-- Final Reassurance Section -->
 <section class="py-24 px-6 bg-background-light dark:bg-background-dark/30">
     <div class="max-w-[800px] mx-auto text-center">
-        <h2 class="text-2xl md:text-3xl font-black mb-8 text-gray-900 dark:text-white italic">"Masjid yang kuat bukan hanya bangunannya. Tetapi dampaknya bagi masyarakat."</h2>
+        <h2 class="text-xl md:text-2xl font-black mb-8 text-gray-900 dark:text-white italic">"Masjid yang kuat bukan hanya bangunannya. Tetapi dampaknya bagi masyarakat."</h2>
         <p class="text-primary font-black tracking-wide uppercase text-xs mb-12">Didukung Yayasan Generasi Sahabat Muslim. Amanah untuk kebaikan bersama.</p>
         
         <div class="grid md:grid-cols-3 gap-6">

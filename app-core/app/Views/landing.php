@@ -9,10 +9,10 @@
             <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold uppercase tracking-wider w-fit">
                 Pusat Kebaikan Masyarakat
             </div>
-            <h1 class="text-5xl md:text-7xl font-black leading-[1.05] tracking-tight text-[#111815] dark:text-white">
+            <h1 class="text-4xl md:text-5xl font-black leading-tight tracking-tight text-[#111815] dark:text-white">
                 Masjid yang Kuat, <br/> <span class="text-primary italic">Masyarakat yang Berdaya</span>
             </h1>
-            <p class="text-xl text-[#3d5a4d] dark:text-gray-400 max-w-[540px] leading-relaxed">
+            <p class="text-lg text-[#3d5a4d] dark:text-gray-400 max-w-[540px] leading-relaxed">
                 Kami hadir untuk mengembalikan masjid sebagai sumber solusi bagi setiap persoalan warga. Masj.id adalah gerakan kolaboratif untuk memperkuat peran sosial rumah Allah.
             </p>
             <div class="flex flex-wrap gap-4">
@@ -35,7 +35,7 @@
 <section class="py-24 px-6 bg-background-light dark:bg-background-dark/30">
     <div class="max-w-[1200px] mx-auto text-center mb-16">
         <h2 class="text-primary font-bold uppercase tracking-widest text-sm mb-4">Pilar Perubahan</h2>
-        <h3 class="text-3xl md:text-5xl font-black text-[#111815] dark:text-white">Fokus Dampak Gerakan Kita</h3>
+        <h3 class="text-2xl md:text-3xl font-black text-[#111815] dark:text-white">Fokus Dampak Gerakan Kita</h3>
     </div>
     <div class="max-w-[1200px] mx-auto grid md:grid-cols-3 gap-8">
         <div class="bg-white dark:bg-[#1a2e25] p-10 rounded-[2.5rem] border border-primary/5 shadow-sm hover:shadow-xl transition-all text-center">
@@ -74,12 +74,12 @@
         <div class="inline-flex items-center justify-center size-20 rounded-full bg-primary/10 text-primary mb-10">
             <span class="material-symbols-outlined text-4xl">groups</span>
         </div>
-        <h2 class="text-3xl md:text-5xl font-black mb-10 text-[#111815] dark:text-white leading-tight">Gerakan Berbagi Harapan</h2>
-        <div class="space-y-8 text-xl text-[#3d5a4d] dark:text-gray-400 leading-relaxed italic">
+        <h2 class="text-2xl md:text-4xl font-black mb-8 text-[#111815] dark:text-white leading-tight">Gerakan Berbagi Harapan</h2>
+        <div class="space-y-6 text-lg text-[#3d5a4d] dark:text-gray-400 leading-relaxed italic">
             <p>
                 "Ini bukan sekadar tentang teknologi, melainkan tentang menghidupkan kembali ruh gotong royong di tengah masyarakat kita."
             </p>
-            <p class="not-italic text-lg">
+            <p class="not-italic text-base">
                 Masj.id menghubungkan niat tulus jamaah dengan kebutuhan nyata masyarakat, dikelola dengan cara yang paling amanah dan transparan melalui institusi masjid terdekat Anda.
             </p>
         </div>
@@ -90,11 +90,11 @@
 <section class="py-24 px-6">
     <div class="max-w-[1100px] mx-auto bg-[#0a241a] dark:bg-[#11241d] rounded-[3rem] p-12 md:p-24 text-center relative overflow-hidden shadow-2xl">
         <div class="absolute top-0 right-0 w-96 h-96 bg-primary/20 blur-[120px] -translate-y-1/2 translate-x-1/2"></div>
-        <div class="relative z-10 flex flex-col items-center gap-10">
-            <h2 class="text-4xl md:text-6xl font-black text-white leading-tight">
+        <div class="relative z-10 flex flex-col items-center gap-8">
+            <h2 class="text-3xl md:text-5xl font-black text-white leading-tight text-center">
                 Jadilah Bagian dari <br/> <span class="text-primary italic">Cahaya Kebaikan Ini</span>
             </h2>
-            <p class="text-xl text-emerald-100/70 max-w-[700px]">
+            <p class="text-lg text-emerald-100/70 max-w-[700px] text-center">
                 Dampak besar dimulai dari langkah kecil di masjid terdekat Anda. Mari bersama-sama menebar manfaat nyata bagi lingkungan sekitar.
             </p>
             <div class="flex flex-wrap justify-center gap-4">
