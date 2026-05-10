@@ -30,7 +30,9 @@ class Auth extends BaseController
             $userId = $userModel->insert($userData);
 
             if (!$userId) {
-                throw new \Exception("Gagal mendaftarkan user PIC.");
+                $errors = $userModel->errors();
+                $errorMsg = !empty($errors) ? implode(', ', $errors) : "Gagal mendaftarkan user PIC (Email mungkin sudah terdaftar).";
+                throw new \Exception($errorMsg);
             }
 
             // 2. Create Masjid
@@ -41,7 +43,9 @@ class Auth extends BaseController
             $masjidId = $masjidModel->insert($masjidData);
 
             if (!$masjidId) {
-                throw new \Exception("Gagal mendaftarkan masjid.");
+                $errors = $masjidModel->errors();
+                $errorMsg = !empty($errors) ? implode(', ', $errors) : "Gagal mendaftarkan masjid.";
+                throw new \Exception($errorMsg);
             }
 
             // 3. Link User to Masjid as Pengurus
@@ -77,6 +81,8 @@ class Auth extends BaseController
 
         } catch (\Exception $e) {
             $db->transRollback();
+            // Log the actual error for debugging
+            log_message('error', '[Registration Error] ' . $e->getMessage());
             return redirect()->back()->withInput()->with('error', $e->getMessage());
         }
     }
@@ -172,6 +178,19 @@ class Auth extends BaseController
 
         $masjidModel = new MasjidModel();
         $exists = $masjidModel->where('username', $username)->first();
+
+        return $this->response->setJSON(['available' => !$exists]);
+    }
+
+    public function checkEmail()
+    {
+        $email = $this->request->getGet('email');
+        if (empty($email)) {
+            return $this->response->setJSON(['available' => false, 'message' => 'Email kosong']);
+        }
+
+        $userModel = new UserModel();
+        $exists = $userModel->where('email', $email)->first();
 
         return $this->response->setJSON(['available' => !$exists]);
     }

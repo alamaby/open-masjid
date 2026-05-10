@@ -128,9 +128,10 @@
                     <label class="text-sm font-bold text-slate-700 ml-1">Nama Lengkap PIC</label>
                     <input name="nama_pic" class="w-full h-[54px] px-4 bg-white border border-slate-200 rounded-xl focus:ring-4 focus:ring-primary/5 focus:border-primary transition-all placeholder:text-slate-300 text-slate-900" placeholder="Nama lengkap penanggung jawab" type="text" required/>
                 </div>
-                <div class="space-y-2.5">
+                <div class="space-y-2.5 relative">
                     <label class="text-sm font-bold text-slate-700 ml-1">Email</label>
-                    <input name="email_pic" class="w-full h-[54px] px-4 bg-white border border-slate-200 rounded-xl focus:ring-4 focus:ring-primary/5 focus:border-primary transition-all placeholder:text-slate-300 text-slate-900" placeholder="nama@email.com" type="email" required/>
+                    <input name="email_pic" id="email_pic" class="w-full h-[54px] px-4 bg-white border border-slate-200 rounded-xl focus:ring-4 focus:ring-primary/5 focus:border-primary transition-all placeholder:text-slate-300 text-slate-900" placeholder="nama@email.com" type="email" required/>
+                    <div id="email-badge-pic" class="absolute right-4 top-[45px] flex items-center gap-1.5 bg-white pl-2 hidden"></div>
                 </div>
                 <div class="space-y-2.5">
                     <label class="text-sm font-bold text-slate-700 ml-1">Nomor WhatsApp</label>
@@ -190,9 +191,10 @@
                     <input name="nama_lengkap" class="w-full h-[54px] px-4 bg-white border border-slate-200 rounded-xl focus:ring-4 focus:ring-primary/5 focus:border-primary transition-all placeholder:text-slate-300 text-slate-900" placeholder="Masukkan nama lengkap sesuai identitas" type="text" required/>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-7">
-                    <div class="space-y-2.5">
+                    <div class="space-y-2.5 relative">
                         <label class="text-sm font-bold text-slate-700 ml-1">Email</label>
-                        <input name="email" class="w-full h-[54px] px-4 bg-white border border-slate-200 rounded-xl focus:ring-4 focus:ring-primary/5 focus:border-primary transition-all placeholder:text-slate-300 text-slate-900" placeholder="nama@email.com" type="email" required/>
+                        <input name="email" id="email_jamaah" class="w-full h-[54px] px-4 bg-white border border-slate-200 rounded-xl focus:ring-4 focus:ring-primary/5 focus:border-primary transition-all placeholder:text-slate-300 text-slate-900" placeholder="nama@email.com" type="email" required/>
+                        <div id="email-badge-jamaah" class="absolute right-4 top-[45px] flex items-center gap-1.5 bg-white pl-2 hidden"></div>
                     </div>
                     <div class="space-y-2.5">
                         <label class="text-sm font-bold text-slate-700 ml-1">Nomor WhatsApp</label>
@@ -338,6 +340,59 @@
                     });
             }, 500);
         });
+    }
+
+    // Email Availability Check (PIC)
+    const emailPicInput = document.getElementById('email_pic');
+    const emailBadgePic = document.getElementById('email-badge-pic');
+    
+    if (emailPicInput) {
+        emailPicInput.addEventListener('input', function() {
+            checkEmailAvailability(this.value, emailBadgePic);
+        });
+    }
+
+    // Email Availability Check (Jamaah)
+    const emailJamaahInput = document.getElementById('email_jamaah');
+    const emailBadgeJamaah = document.getElementById('email-badge-jamaah');
+    
+    if (emailJamaahInput) {
+        emailJamaahInput.addEventListener('input', function() {
+            checkEmailAvailability(this.value, emailBadgeJamaah);
+        });
+    }
+
+    let emailTimeout = null;
+    function checkEmailAvailability(email, badgeElement) {
+        clearTimeout(emailTimeout);
+        if (email === '' || !email.includes('@')) {
+            badgeElement.classList.add('hidden');
+            return;
+        }
+
+        badgeElement.classList.remove('hidden');
+        badgeElement.innerHTML = `<span class="text-[10px] text-slate-400">Memeriksa...</span>`;
+
+        emailTimeout = setTimeout(() => {
+            fetch(`<?= base_url('auth/check-email') ?>?email=${email}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.available) {
+                        badgeElement.innerHTML = `
+                            <span class="material-symbols-outlined text-emerald-600 text-[18px] fill-1">check_circle</span>
+                            <span class="text-[10px] font-bold text-emerald-600 uppercase tracking-[0.1em]">Tersedia</span>
+                        `;
+                    } else {
+                        badgeElement.innerHTML = `
+                            <span class="material-symbols-outlined text-rose-500 text-[18px] fill-1">cancel</span>
+                            <span class="text-[10px] font-bold text-rose-500 uppercase tracking-[0.1em]">Terdaftar</span>
+                        `;
+                    }
+                })
+                .catch(err => {
+                    badgeElement.classList.add('hidden');
+                });
+        }, 500);
     }
 </script>
 

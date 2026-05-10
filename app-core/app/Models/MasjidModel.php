@@ -28,8 +28,15 @@ class MasjidModel extends Model
     protected $updatedField  = 'updated_at';
 
     // Validation
-    protected $validationRules      = [];
-    protected $validationMessages   = [];
-    protected $skipValidation       = false;
+    protected $validationRules      = [
+        'name'     => 'required|min_length[3]',
+        'username' => 'required|alpha_dash|is_unique[masjid.username]|min_length[3]'
+    ];
+    protected $validationMessages   = [
+        'username' => [
+            'is_unique' => 'Username masjid ini sudah digunakan. Silakan pilih username lain.',
+            'alpha_dash' => 'Username hanya boleh berisi huruf, angka, dash (-), dan underscore (_).'
+        ]
+    ];
     protected $cleanValidationRules = true;
 }

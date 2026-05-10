@@ -21,8 +21,16 @@ class UserModel extends Model
     protected $updatedField  = 'updated_at';
 
     // Validation
-    protected $validationRules      = [];
-    protected $validationMessages   = [];
-    protected $skipValidation       = false;
+    protected $validationRules      = [
+        'name'     => 'required|min_length[3]',
+        'email'    => 'required|valid_email|is_unique[users.email]',
+        'password_hash' => 'required',
+        'role'     => 'required|in_list[superadmin,user]'
+    ];
+    protected $validationMessages   = [
+        'email' => [
+            'is_unique' => 'Email ini sudah terdaftar. Silakan gunakan email lain atau masuk ke akun yang ada.'
+        ]
+    ];
     protected $cleanValidationRules = true;
 }
