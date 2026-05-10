@@ -74,6 +74,7 @@
                                 <span class="material-symbols-outlined text-lg">edit</span>
                             </button>
                             <form action="<?= base_url('dashboard/pengurus/delete') ?>" method="POST" onsubmit="return confirm('Hapus pengurus ini?');">
+                                <?= csrf_field() ?>
                                 <input type="hidden" name="id" value="<?= $p['id'] ?>">
                                 <button type="submit" class="size-8 flex items-center justify-center text-gray-500 hover:text-red-500 hover:bg-red-50 rounded-lg">
                                     <span class="material-symbols-outlined text-lg">delete</span>
@@ -94,6 +95,7 @@
         <h3 class="text-xl font-bold mb-6 text-[#111816] dark:text-white">Tambah Pengurus Baru</h3>
         
         <form action="<?= base_url('dashboard/pengurus/add') ?>" method="POST" class="space-y-4">
+            <?= csrf_field() ?>
             <!-- User Search -->
             <div class="relative">
                 <label class="block text-sm font-bold mb-2 text-[#111816] dark:text-white">Cari User (Email/Nama)</label>
@@ -148,6 +150,7 @@
         <h3 class="text-xl font-bold mb-6 text-[#111816] dark:text-white">Edit Pengurus</h3>
         
         <form action="<?= base_url('dashboard/pengurus/update') ?>" method="POST" class="space-y-4">
+            <?= csrf_field() ?>
             <input type="hidden" name="id" id="editId">
             
             <div class="p-4 bg-gray-50 dark:bg-white/5 rounded-xl border border-gray-100 dark:border-white/10 mb-4">

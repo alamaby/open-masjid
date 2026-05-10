@@ -90,6 +90,7 @@
 
         <div class="lg:col-span-7 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-2xl p-8 shadow-xl shadow-gray-200/50 dark:shadow-none">
             <form action="#" class="space-y-6" method="POST">
+                <?= csrf_field() ?>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="flex flex-col gap-2">
                         <label class="text-sm font-semibold text-gray-700 dark:text-gray-300">Nama Lengkap</label>

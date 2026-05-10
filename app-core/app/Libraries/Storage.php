@@ -31,7 +31,7 @@ class Storage
                         'secret' => env('S3_SECRET'),
                     ],
                     'endpoint' => env('S3_ENDPOINT'), // For Minio or other S3 compatibles
-                    'use_path_style_endpoint' => true,
+                    'use_path_style_endpoint' => env('S3_USE_PATH_STYLE', false),
                 ]);
                 $this->bucket = env('S3_BUCKET');
             }
@@ -43,14 +43,52 @@ class Storage
      * 
      * @param \CodeIgniter\HTTP\Files\UploadedFile $file
      * @param string $path Target directory/prefix
+     * @param array $allowedTypes Optional allowed extensions (default: images)
      * @return string|null Filename/Key on success, null on failure
      */
-    public function upload($file, $path = 'uploads')
+    public function upload($file, $path = 'uploads', $allowedTypes = ['jpg', 'jpeg', 'png', 'webp', 'gif'])
     {
         if (!$file->isValid() || $file->hasMoved()) {
             return null;
         }
 
+        // --- SAAS FOLDER ISOLATION ---
+        $masjidUsername = session()->get('masjid_username');
+        $datePath = date('Y/m');
+        
+        // Remove trailing or leading slashes from original path
+        $path = trim($path, '/');
+        
+        if (!empty($masjidUsername)) {
+            $path = "{$masjidUsername}/{$datePath}/{$path}";
+        } else {
+            // For global/superadmin uploads
+            $path = "global/{$datePath}/{$path}";
+        }
+
+        // --- SECURITY VALIDATION ---
+        // 1. Check Extension
+        $ext = strtolower($file->getExtension());
+        if (!in_array($ext, $allowedTypes)) {
+            log_message('error', 'Upload Blocked: Invalid extension ' . $ext);
+            return null;
+        }
+
+        // 2. Check MIME Type (More secure)
+        $mime = $file->getMimeType();
+        $allowedMimes = [
+            'image/jpeg', 'image/png', 'image/webp', 'image/gif'
+        ];
+        
+        // If we are checking for images, enforce MIME check
+        if (array_intersect($allowedTypes, ['jpg', 'jpeg', 'png', 'webp', 'gif'])) {
+            if (!in_array($mime, $allowedMimes)) {
+                log_message('error', 'Upload Blocked: Malicious MIME type ' . $mime);
+                return null;
+            }
+        }
+
+        // 3. Rename to random string (prevents directory traversal & original file name leaks)
         $newName = $file->getRandomName();
 
         if ($this->driver === 's3') {
@@ -60,6 +98,7 @@ class Storage
                     'Key'    => $path . '/' . $newName,
                     'Body'   => fopen($file->getTempName(), 'r'),
                     'ACL'    => 'public-read',
+                    'ContentType' => $mime
                 ]);
                 return $path . '/' . $newName;
             } catch (AwsException $e) {
@@ -119,6 +158,10 @@ class Storage
         if (empty($path)) return '';
 
         if ($this->driver === 's3') {
+            $publicUrl = env('S3_PUBLIC_URL');
+            if (!empty($publicUrl)) {
+                return rtrim($publicUrl, '/') . '/' . ltrim($path, '/');
+            }
             return $this->s3Client->getObjectUrl($this->bucket, $path);
         }
 

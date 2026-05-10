@@ -1,0 +1,19 @@
+# Disable PHP engine
+<IfModule mod_php7.c>
+    php_flag engine off
+</IfModule>
+<IfModule mod_php.c>
+    php_flag engine off
+</IfModule>
+
+# Block execution of script extensions
+<FilesMatch "\.(?i:php|php[0-9]|phtml|phps|pl|py|jsp|asp|sh|cgi)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Prevention of execution in this directory via CGI
+Options -ExecCGI
+RemoveHandler .php .php3 .php4 .php5 .php7 .php8 .phtml .pl .py .jsp .asp .htm .html .sh .cgi
+RemoveType .php .php3 .php4 .php5 .php7 .php8 .phtml .pl .py .jsp .asp .htm .html .sh .cgi
+

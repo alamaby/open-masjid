@@ -1,6 +1,6 @@
-# Masj.id - Manajemen Masjid Modern & Transparan
+# Open Masjid - Gerakan Keterbukaan & Digitalisasi Masjid
 
-**Masj.id** adalah platform digital komprehensif yang dirancang untuk memodernisasi tata kelola masjid dan meningkatkan transparansi antara pengelola masjid (DKM) dengan jamaahnya. Platform ini menyediakan alat manajemen yang kuat untuk kegiatan, keuangan, serta pemberdayaan sosial berbasis masjid.
+**Open Masjid** merupakan sebuah inisiatif dan gerakan pengembangan sistem sumber terbuka (*open-source*) yang didedikasikan untuk mewujudkan tata kelola masjid yang lebih modern dan transparan. Melalui platform ini, kami berikhtiar untuk menghadirkan kemudahan bagi para pengelola (DKM) dalam mengelola data jamaah, menyajikan transparansi laporan keuangan yang dapat diakses publik, serta mempublikasikan berbagai kegiatan syiar dan sosial secara terintegrasi.
 
 ## ✨ Fitur Utama
 
@@ -26,8 +26,8 @@
 1. **Clone Repositori**
 
    ```bash
-   git clone https://github.com/motiolabs-space/masjid2.git
-   cd masjid2
+   git clone https://github.com/motiolabs-space/open-masjid.git
+   cd open-masjid
    ```
 
 2. **Konfigurasi Environment**
@@ -64,4 +64,4 @@ Proyek ini dikembangkan untuk kemaslahatan umat. Jika Anda ingin berkontribusi, 
 
 ---
 
-© 2024 Masj.id - Memberdayakan Masjid melalui Teknologi.
+© 2024 Open Masjid - Memberdayakan Masjid melalui Teknologi Terbuka.

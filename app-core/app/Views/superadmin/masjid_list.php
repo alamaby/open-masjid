@@ -35,11 +35,11 @@
                 <?php foreach($masjids as $m): ?>
                 <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
                     <td class="px-6 py-4 text-[10px] font-bold text-slate-400">#<?= $m['id'] ?></td>
-                    <td class="px-6 py-4 font-bold text-slate-900 dark:text-white"><?= $m['name'] ?></td>
+                    <td class="px-6 py-4 font-bold text-slate-900 dark:text-white"><?= esc($m['name']) ?></td>
                     <td class="px-6 py-4">
-                        <span class="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded text-xs">@<?= $m['username'] ?></span>
+                        <span class="bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded text-xs">@<?= esc($m['username']) ?></span>
                     </td>
-                    <td class="px-6 py-4 truncate max-w-[200px]"><?= $m['address'] ?? '<span class="italic text-slate-400">Belum diisi</span>' ?></td>
+                    <td class="px-6 py-4 truncate max-w-[200px]"><?= !empty($m['address']) ? esc($m['address']) : '<span class="italic text-slate-400">Belum diisi</span>' ?></td>
                     <td class="px-6 py-4 text-slate-500 font-medium"><?= date('d M Y', strtotime($m['created_at'])) ?></td>
                     <td class="px-6 py-4 text-right space-x-2">
                         <button class="text-primary hover:text-primary-dark font-bold text-xs">Edit</button>

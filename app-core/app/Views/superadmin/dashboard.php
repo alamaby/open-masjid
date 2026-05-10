@@ -74,8 +74,8 @@
                 <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
                     <?php foreach($recent_masjids as $m): ?>
                     <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
-                        <td class="px-6 py-4 font-bold"><?= $m['name'] ?></td>
-                        <td class="px-6 py-4 text-slate-500">@<?= $m['username'] ?></td>
+                        <td class="px-6 py-4 font-bold"><?= esc($m['name']) ?></td>
+                        <td class="px-6 py-4 text-slate-500">@<?= esc($m['username']) ?></td>
                         <td class="px-6 py-4 text-slate-400 font-medium"><?= date('d M Y', strtotime($m['created_at'])) ?></td>
                         <td class="px-6 py-4 text-right">
                             <button class="text-primary hover:underline font-bold text-xs">Detail</button>

@@ -221,14 +221,12 @@ class Admin extends BaseController
             }
 
             // Upload new photo
-            $uploadPath = $storage->upload($file, 'images/masjid');
+            $uploadPath = $storage->upload($file, 'profil');
             if ($uploadPath) {
                 $data['foto_utama'] = $uploadPath;
             } else {
-                log_message('error', 'Gagal upload foto masjid. Error: ' . $file->getErrorString());
+                return redirect()->back()->withInput()->with('error', 'Format foto utama tidak didukung atau file berbahaya.');
             }
-        } elseif ($file && !$file->isValid()) {
-            log_message('error', 'File tidak valid: ' . $file->getErrorString());
         }
 
         // Handle Logo Upload
@@ -243,11 +241,11 @@ class Admin extends BaseController
             }
 
             // Upload new logo
-            $logoPath = $storage->upload($logoFile, 'images/masjid/logo');
+            $logoPath = $storage->upload($logoFile, 'logo');
             if ($logoPath) {
                 $data['logo'] = $logoPath;
             } else {
-                log_message('error', 'Gagal upload logo masjid. Error: ' . $logoFile->getErrorString());
+                return redirect()->back()->withInput()->with('error', 'Format logo tidak didukung atau file berbahaya.');
             }
         }
 
@@ -470,9 +468,11 @@ class Admin extends BaseController
                     $storage->delete($oldNews['thumbnail']);
                 }
             }
-            $uploadPath = $storage->upload($file, 'images/news');
+            $uploadPath = $storage->upload($file, 'berita');
             if ($uploadPath) {
                 $data['thumbnail'] = $uploadPath;
+            } else {
+                return redirect()->back()->withInput()->with('error', 'Format thumbnail tidak didukung atau file berbahaya.');
             }
         }
 
@@ -725,7 +725,7 @@ class Admin extends BaseController
 
         foreach ($files['photos'] as $file) {
             if ($file->isValid() && !$file->hasMoved()) {
-                $path = $storage->upload($file, 'images/gallery');
+                $path = $storage->upload($file, 'galeri');
                 if ($path) {
                     $galleryModel->insert([
                         'masjid_id'  => $masjidId,
@@ -733,6 +733,8 @@ class Admin extends BaseController
                         'category'   => $category
                     ]);
                     $successCount++;
+                } else {
+                    return $this->response->setJSON(['status' => 'error', 'message' => 'Salah satu file foto tidak didukung atau berbahaya.']);
                 }
             }
         }
@@ -860,7 +862,7 @@ class Admin extends BaseController
                     $storage->delete($oldProgram['thumbnail']);
                 }
             }
-            $uploadPath = $storage->upload($file, 'images/programs');
+            $uploadPath = $storage->upload($file, 'program');
             if ($uploadPath) {
                 $data['thumbnail'] = $uploadPath;
             }
@@ -1015,7 +1017,7 @@ class Admin extends BaseController
                     $storage->delete($oldTrans['attachment']);
                 }
             }
-            $uploadPath = $storage->upload($file, 'images/finance');
+            $uploadPath = $storage->upload($file, 'keuangan');
             if ($uploadPath) {
                 $data['attachment'] = $uploadPath;
             }
@@ -1256,8 +1258,12 @@ class Admin extends BaseController
                     $storage->delete($oldItem['photo']);
                 }
             }
-            $fileName = $storage->upload($file, 'inventory');
-            $data['photo'] = $fileName;
+            $fileName = $storage->upload($file, 'inventaris');
+            if ($fileName) {
+                $data['photo'] = $fileName;
+            } else {
+                return redirect()->back()->withInput()->with('error', 'Format foto aset tidak didukung atau file berbahaya.');
+            }
         }
 
         if ($id) {
@@ -1342,7 +1348,11 @@ class Admin extends BaseController
                 $storage->delete($currentSettings['qris_image']);
             }
             $fileName = $storage->upload($file, 'qris');
-            $data['qris_image'] = $fileName;
+            if ($fileName) {
+                $data['qris_image'] = $fileName;
+            } else {
+                return redirect()->back()->withInput()->with('error', 'Format gambar QRIS tidak didukung atau file berbahaya.');
+            }
         }
 
         if ($id) {
@@ -1677,9 +1687,13 @@ class Admin extends BaseController
                     $storage->delete($oldItem['evidence_photo']);
                 }
             }
-            $filename = $file->getRandomName();
-            $path = $storage->upload($file, 'distributions', $filename);
-            $data['evidence_photo'] = $path;
+            $filename = $file->getRandomName(); // getRandomName is also called inside upload, but passing it explicitly is fine or we can just let it be
+            $path = $storage->upload($file, 'penyaluran');
+            if ($path) {
+                $data['evidence_photo'] = $path;
+            } else {
+                return redirect()->back()->withInput()->with('error', 'Format foto bukti tidak didukung atau file berbahaya.');
+            }
         }
 
         if ($id) {

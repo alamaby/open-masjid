@@ -14,7 +14,7 @@
         </div>
 
         <form action="<?= base_url('dashboard/broadcast/send') ?>" method="POST" class="space-y-6" onsubmit="return confirm('Apakah Anda yakin ingin mengirim pesan ini ke semua subscriber?');">
-            
+            <?= csrf_field() ?>
             <div class="bg-white dark:bg-white/5 p-8 rounded-3xl border border-[#e5e7eb] dark:border-white/10 space-y-6">
                 
                 <div>

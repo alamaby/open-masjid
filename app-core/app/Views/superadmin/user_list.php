@@ -29,11 +29,11 @@
             <tbody class="divide-y divide-slate-100 dark:divide-slate-800 text-slate-700 dark:text-slate-300">
                 <?php foreach($users as $u): ?>
                 <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
-                    <td class="px-6 py-4 font-bold text-slate-900 dark:text-white"><?= $u['name'] ?></td>
+                    <td class="px-6 py-4 font-bold text-slate-900 dark:text-white"><?= esc($u['name']) ?></td>
                     <td class="px-6 py-4">
                         <div class="flex flex-col">
-                            <span class="font-medium text-slate-900 dark:text-white"><?= $u['email'] ?></span>
-                            <span class="text-[10px] text-slate-400"><?= $u['phone'] ?? '-' ?></span>
+                            <span class="font-medium text-slate-900 dark:text-white"><?= esc($u['email']) ?></span>
+                            <span class="text-[10px] text-slate-400"><?= esc($u['phone'] ?? '-') ?></span>
                         </div>
                     </td>
                     <td class="px-6 py-4">
@@ -43,7 +43,7 @@
                         if($u['role'] == 'pengurus') $roleClass = 'bg-blue-100 text-blue-700 font-bold';
                         ?>
                         <span class="px-2 py-1 rounded text-[10px] uppercase font-bold <?= $roleClass ?>">
-                            <?= $u['role'] ?>
+                            <?= esc($u['role']) ?>
                         </span>
                     </td>
                     <td class="px-6 py-4 text-slate-500 font-medium"><?= date('d M Y', strtotime($u['created_at'])) ?></td>
