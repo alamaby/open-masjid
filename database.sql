@@ -1,0 +1,173 @@
+-- Open Masjid Database Schema (Clean Version)
+-- Optimized for public repository (No sensitive data)
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
+
+-- --------------------------------------------------------
+-- 1. Core Tables
+-- --------------------------------------------------------
+
+-- Table structure for `provinces`
+CREATE TABLE IF NOT EXISTS `provinces` (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Table structure for `regencies`
+CREATE TABLE IF NOT EXISTS `regencies` (
+  `id` varchar(50) NOT NULL,
+  `province_id` int(11) UNSIGNED NOT NULL,
+  `name` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `province_id` (`province_id`),
+  CONSTRAINT `regencies_province_id_foreign` FOREIGN KEY (`province_id`) REFERENCES `provinces` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Table structure for `users`
+CREATE TABLE IF NOT EXISTS `users` (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` varchar(100) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `phone` varchar(20) DEFAULT NULL,
+  `password_hash` varchar(255) NOT NULL,
+  `role` enum('superadmin','user') DEFAULT 'user',
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `email` (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Table structure for `masjid`
+CREATE TABLE IF NOT EXISTS `masjid` (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  `tagline` varchar(255) DEFAULT NULL,
+  `username` varchar(100) NOT NULL,
+  `address` text DEFAULT NULL,
+  `phone` varchar(20) DEFAULT NULL,
+  `whatsapp` varchar(20) DEFAULT NULL,
+  `email` varchar(100) DEFAULT NULL,
+  `logo` varchar(255) DEFAULT NULL,
+  `foto_utama` varchar(255) DEFAULT NULL,
+  `about_us` text DEFAULT NULL,
+  `visi` text DEFAULT NULL,
+  `misi` text DEFAULT NULL,
+  `provinsi` varchar(100) DEFAULT NULL,
+  `kabupaten` varchar(100) DEFAULT NULL,
+  `regency_id` varchar(50) DEFAULT NULL,
+  `latitude` varchar(50) DEFAULT NULL,
+  `longitude` varchar(50) DEFAULT NULL,
+  `menu_berita` tinyint(1) DEFAULT 1,
+  `menu_program` tinyint(1) DEFAULT 1,
+  `menu_laporan` tinyint(1) DEFAULT 1,
+  `menu_kontak` tinyint(1) DEFAULT 1,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `username` (`username`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Table structure for `masjid_pengurus`
+CREATE TABLE IF NOT EXISTS `masjid_pengurus` (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `masjid_id` int(11) UNSIGNED NOT NULL,
+  `user_id` int(11) UNSIGNED NOT NULL,
+  `role` enum('admin','staff') DEFAULT 'admin',
+  `title` varchar(100) DEFAULT NULL,
+  `is_creator` tinyint(1) DEFAULT 0,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `masjid_id` (`masjid_id`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `masjid_pengurus_masjid_id_foreign` FOREIGN KEY (`masjid_id`) REFERENCES `masjid` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `masjid_pengurus_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+-- 2. Feature Tables
+-- --------------------------------------------------------
+
+-- News
+CREATE TABLE IF NOT EXISTS `masjid_news_categories` (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `masjid_id` int(11) UNSIGNED NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `slug` varchar(100) NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `news_cat_masjid_id_foreign` FOREIGN KEY (`masjid_id`) REFERENCES `masjid` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS `masjid_news` (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `masjid_id` int(11) UNSIGNED NOT NULL,
+  `category_id` int(11) UNSIGNED DEFAULT NULL,
+  `title` varchar(255) NOT NULL,
+  `slug` varchar(255) NOT NULL,
+  `content` text NOT NULL,
+  `thumbnail` varchar(255) DEFAULT NULL,
+  `status` enum('published','draft') DEFAULT 'published',
+  `views` int(11) DEFAULT 0,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `news_masjid_id_foreign` FOREIGN KEY (`masjid_id`) REFERENCES `masjid` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Programs
+CREATE TABLE IF NOT EXISTS `masjid_programs` (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `masjid_id` int(11) UNSIGNED NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `slug` varchar(255) NOT NULL,
+  `description` text NOT NULL,
+  `thumbnail` varchar(255) DEFAULT NULL,
+  `date_start` datetime DEFAULT NULL,
+  `date_end` datetime DEFAULT NULL,
+  `location` varchar(255) DEFAULT NULL,
+  `target_donation` decimal(15,2) DEFAULT NULL,
+  `status` enum('published','draft') DEFAULT 'published',
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `programs_masjid_id_foreign` FOREIGN KEY (`masjid_id`) REFERENCES `masjid` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Finance
+CREATE TABLE IF NOT EXISTS `masjid_finance_categories` (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `masjid_id` int(11) UNSIGNED NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `type` enum('pemasukan','pengeluaran') DEFAULT 'pemasukan',
+  `slug` varchar(100) NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `fin_cat_masjid_id_foreign` FOREIGN KEY (`masjid_id`) REFERENCES `masjid` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS `masjid_finance_transactions` (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `masjid_id" int(11) UNSIGNED NOT NULL,
+  `category_id` int(11) UNSIGNED DEFAULT NULL,
+  `date` date NOT NULL,
+  `amount` decimal(15,2) DEFAULT 0.00,
+  `type` enum('pemasukan','pengeluaran') NOT NULL,
+  `description` text DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `fin_trans_masjid_id_foreign` FOREIGN KEY (`masjid_id`) REFERENCES `masjid` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+-- 3. Initial Dummy Data
+-- --------------------------------------------------------
+
+-- Default Superadmin (Password: password123)
+INSERT INTO `users` (`name`, `email`, `password_hash`, `role`, `created_at`, `updated_at`) VALUES
+('Super Admin', 'admin@openmasjid.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'superadmin', NOW(), NOW());

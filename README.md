@@ -50,9 +50,20 @@ Sistem ini telah diimplementasikan pada layanan [**masj.id**](https://masj.id) s
    composer install
    ```
 
+3. **Setup Database**
+   - Buat database baru di MySQL/MariaDB.
+   - Impor file `database.sql` yang ada di root direktori untuk membangun struktur tabel dasar dan data awal.
+   - Gunakan fitur **Migrations** untuk memastikan skema database Anda adalah yang terbaru:
+     ```bash
+     php spark migrate
+     ```
+   - **Login Default (Superadmin):**
+     - Email: `admin@openmasjid.com`
+     - Password: `password123`
+
 4. **Menjalankan Aplikasi**
-   - Akses via web server (XAMPP/Laragon) di: `http://localhost/masjid2/`
-   - Buka **Halaman Admin** di: `http://localhost/masjid2/dashboard` (setelah setup login).
+   - Akses via web server (XAMPP/Laragon) di: `http://localhost/open-masjid/`
+   - Buka **Halaman Admin** di: `http://localhost/open-masjid/dashboard` (setelah setup login).
 
 ## 📄 Struktur Direktori
 
